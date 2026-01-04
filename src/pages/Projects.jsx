@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext, useLocation } from "react-router-dom";
 import axios from "axios";
-import { LayoutGrid } from "lucide-react"; 
+import { LayoutGrid, Loader } from "lucide-react"; 
 import ProjectCard from "../components/ProjectCard";
 import PageTransition from "../components/PageTransition";
 
@@ -12,16 +12,25 @@ const Projects = () => {
   const location = useLocation();
 
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("All");
 
   const searchQuery =
     new URLSearchParams(location.search).get("q") || "";
 
-  useEffect(() => { 
-    axios
-      .get("http://localhost:5000/api/projects")
-      .then((res) => setProjects(res.data))
-      .catch(() => {}); // handle error silent for now
+  useEffect(() => {
+    // fetch data from backend api
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/projects");
+        setProjects(res.data);
+      } catch (error) {
+        console.error("error fetching projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleProjectClick = (project) => {
@@ -40,9 +49,6 @@ const Projects = () => {
 
     return matchCategory && matchSearch;
   });
-
-  // dummy projects if api fails (for visualization)
-  const displayProjects = projects.length > 0 ? filteredProjects : []; 
 
   // get first 6 projects for hero section
   const featuredProjects = projects.slice(0, 6);
@@ -78,7 +84,7 @@ const Projects = () => {
             <div className="flex items-center gap-1 text-xs md:text-sm text-gray-300 mt-2 font-medium">
               <span className="font-bold text-white">Fatiya Labibah</span>
               <span className="mx-1">•</span>
-              <span>{projects.length} songs (projects), approx 2 hr 15 min</span>
+              <span>{projects.length} songs (projects)</span>
             </div>
           </div>
         </section>
@@ -89,11 +95,7 @@ const Projects = () => {
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`
-                px-3 py-1.5 md:px-4 md:py-1.5 
-                rounded-full 
-                text-xs md:text-sm 
-                font-bold transition border border-transparent whitespace-nowrap
+              className={`px-4 py-1.5 rounded-full text-sm font-bold transition
                 ${
                   filter === cat
                     ? "bg-white text-black"
@@ -105,51 +107,61 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* hero */}
-        <section className="px-4 md:px-8 mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {featuredProjects.map((item) => (
-              <div
-                key={item._id || item.id}
-                onClick={() => handleProjectClick(item)}
-                className="flex items-center gap-3 bg-[#2a2a2a]/90 hover:bg-[#3E3E3E] rounded pr-2 cursor-pointer h-14 md:h-16 transition overflow-hidden"
-              >
-                <img
-                  src={item.imageUrl || "https://via.placeholder.com/150"}
-                  alt={item.title}
-                  className="h-full aspect-square object-cover"
-                />
-                <span className="font-bold text-xs md:text-sm text-white line-clamp-2 pr-2">
-                  {item.title}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* all projects */}
-        <section className="px-4 md:px-8 pb-24">
-          <h2 className="text-lg md:text-2xl font-bold mb-4 text-white">
-            All Projects
-          </h2>
-
-          {filteredProjects.length === 0 && projects.length === 0 ? (
-             <div className="text-gray-500 text-sm mt-10">
-                No projects found. (Ensure backend is running or mock data is connected)
-             </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-5">
-              {(filteredProjects.length > 0 ? filteredProjects : projects).map((item) => (
-                <div key={item._id || item.id} className="w-full md:w-[200px] shrink-0">
-                  <ProjectCard
-                    project={item}
-                    onClick={handleProjectClick}
-                  />
+        {loading ? (
+           <div className="flex justify-center py-20">
+              <Loader className="animate-spin text-white" size={32} />
+           </div>
+        ) : (
+          <>
+            {/* hero */}
+            {featuredProjects.length > 0 && (
+              <section className="px-4 md:px-8 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {featuredProjects.map((item) => (
+                    <div
+                      key={item._id || item.id}
+                      onClick={() => handleProjectClick(item)}
+                      className="flex items-center gap-3 bg-[#2a2a2a]/90 hover:bg-[#3E3E3E] rounded pr-2 cursor-pointer h-14 md:h-16 transition overflow-hidden"
+                    >
+                      <img
+                        src={item.imageUrl || "https://via.placeholder.com/150"}
+                        alt={item.title}
+                        className="h-full aspect-square object-cover"
+                      />
+                      <span className="font-bold text-xs md:text-sm text-white line-clamp-2 pr-2">
+                        {item.title}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </section>
+              </section>
+            )}
+
+            {/* all projects */}
+            <section className="px-4 md:px-8 pb-24">
+              <h2 className="text-lg md:text-2xl font-bold mb-4 text-white">
+                All Projects
+              </h2>
+
+              {filteredProjects.length === 0 ? (
+                 <div className="text-gray-500 text-sm mt-10">
+                    No projects found.
+                 </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:gap-5">
+                  {filteredProjects.map((item) => (
+                    <div key={item._id || item.id} className="w-full md:w-[200px] shrink-0">
+                      <ProjectCard
+                        project={item}
+                        onClick={handleProjectClick}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
+        )}
       </div>
     </PageTransition>
   );
