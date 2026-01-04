@@ -63,30 +63,31 @@ const RightSidebar = ({ project, onClose, isMobileFull, isExpanded, onToggleExpa
 
       <div className={`
           flex-1 overflow-y-auto custom-scrollbar flex 
-          ${isExpanded ? 'flex-row items-center justify-center p-12 gap-12' : 'flex-col justify-start px-6 pb-12'}
+          ${isExpanded ? 'flex-col px-32 py-8' : 'flex-col justify-start px-6 pb-12'} 
       `}>
           
-          {/* image */}
+          {/* image - modified to show full image */}
           <div className={`
               rounded-lg overflow-hidden shadow-2xl relative group transition-all duration-500 shrink-0
-              ${isExpanded ? 'w-[400px] h-[400px] shadow-black/50' : 'w-full aspect-square mb-8'} 
+              ${isExpanded ? 'max-w-[720px]  mb-8 shadow-black/50' : 'w-full mb-8'} 
               ${isMobileFull ? 'shadow-black/50 mb-8' : ''}
           `}>
             <img 
                 src={project.imageUrl} 
                 alt={project.title} 
-                className="w-full h-full object-cover" 
+                // removed object-cover and h-full to show full image aspect ratio
+                className="w-full h-auto object-contain bg-black/20" 
             />
           </div>
 
           {/* info & actions */}
           <div className={`
-              ${isExpanded ? 'max-w-xl flex flex-col justify-start h-full' : 'w-full'}
+              ${isExpanded ? 'w-full max-w-4xl mx-auto' : 'w-full'}
           `}>
               
               {/* title */}
               <div className="mb-6">
-                <h2 className={`font-bold mb-2 leading-tight ${isExpanded ? 'text-5xl md:text-6xl tracking-tight' : isMobileFull ? 'text-3xl' : 'text-2xl'}`}>
+                <h2 className={`font-bold mb-2 leading-tight ${isExpanded ? 'text-4xl md:text-5xl tracking-tight' : isMobileFull ? 'text-3xl' : 'text-2xl'}`}>
                     {project.title}
                 </h2>
                 <p className="text-gray-400 text-lg font-medium">{project.category} • 2025</p>
