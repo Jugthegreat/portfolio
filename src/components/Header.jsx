@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Search, Library, Download } from 'lucide-react'; 
+import { ChevronLeft, ChevronRight, Search, Library } from 'lucide-react'; 
 import { useNavigate, useLocation } from 'react-router-dom';
 
 /* --- icon profile --- */
@@ -30,7 +30,6 @@ const Header = () => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
-
     navigate(`/projects?q=${encodeURIComponent(value)}`);
   };
 
@@ -52,24 +51,25 @@ const Header = () => {
       </div>
 
       {/* center section */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[480px] hidden md:flex gap-2">
+      {/* PERBAIKAN: w-[calc(100%-120px)] memberikan margin lebih besar (60px kiri-kanan) agar tidak nabrak */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-120px)] md:w-full max-w-[420px] flex gap-2">
         <button
           onClick={() => navigate('/')}
-          className={`p-3 rounded-full ${isHome ? 'bg-[#2a2a2a] text-white' : 'bg-[#1f1f1f] text-gray-400'}`}
+          className={`p-2.5 rounded-full ${isHome ? 'bg-[#2a2a2a] text-white' : 'bg-[#1f1f1f] text-gray-400'} hidden md:block`}
         >
-          <ProfileFilledIcon />
+          <ProfileFilledIcon size={20} />
         </button>
 
-        <div className="relative flex-1 h-12">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+        <div className="relative flex-1 h-10">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
             placeholder="Search project..."
-            className="w-full h-full bg-[#1f1f1f] text-white rounded-full pl-10 pr-12 outline-none focus:ring-2 focus:ring-white/20"
+            className="w-full h-full bg-[#1f1f1f] text-white rounded-full pl-10 pr-10 outline-none focus:ring-2 focus:ring-white/20 text-sm"
           />
-          <Library className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          <Library className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
         </div>
       </div>
 
