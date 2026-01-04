@@ -1,53 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useOutletContext } from 'react-router-dom'; 
 import { 
-  BadgeCheck, MapPin, Play, Clock, MoreHorizontal, 
-  Github, Linkedin, Mail, Calendar, ExternalLink, Heart, 
-  ArrowDownCircle, Share2, Shuffle
+  BadgeCheck, Play, MoreHorizontal, 
+  Github, Linkedin, Mail, ArrowDownCircle, Shuffle, Loader
 } from "lucide-react";
 import PageTransition from '../components/PageTransition';
 
-// DATA DUMMY POPULAR PROJECTS
-const POPULAR_PROJECTS = [
-  {
-    id: 1,
-    title: "CampGear App",
-    tech: "Flutter • Laravel",
-    year: "2025",
-    status: "Completed",
-    views: "1,204",
-    image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=100&q=80"
-  },
-  {
-    id: 2,
-    title: "WonderAI Platform",
-    tech: "React • Tailwind • OpenAI",
-    year: "2024",
-    status: "In Progress",
-    views: "8,320",
-    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=100&q=80"
-  },
-  {
-    id: 3,
-    title: "Spotify Portfolio",
-    tech: "React • Node.js",
-    year: "2026",
-    status: "Live Demo",
-    views: "542",
-    image: "https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=100&q=80"
-  },
-  {
-    id: 4,
-    title: "E-Commerce Dashboard",
-    tech: "Vue.js • Firebase",
-    year: "2023",
-    status: "Archived",
-    views: "2,100",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&q=80"
-  }
-];
-
 const Home = () => {
+  // get context from layout
+  const { setSelectedProject, setShowRightSidebar } = useOutletContext();
   const [hoverRow, setHoverRow] = useState(null);
+  
+  // state for data
+  const [popularProjects, setPopularProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // fetch data from backend
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/projects");
+            // sort by views or just take first 5 as 'popular'
+            const data = res.data || [];
+            // limit to top 5
+            setPopularProjects(data.slice(0, 5));
+        } catch (error) {
+            console.error("error fetching home data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchData();
+  }, []);
+
+  // handle click to show player & sidebar
+  const handleProjectClick = (project) => {
+    setSelectedProject(project);
+    setShowRightSidebar(true);
+  };
 
   return (
     <PageTransition>
@@ -120,56 +111,63 @@ const Home = () => {
       {/* main content */}
       <div className="px-4 md:px-8 pb-24">
         
-        {/* popular projects */}
+        {/* popular projects (dynamic) */}
         <div className="mb-8 md:mb-12">
             <h2 className="hidden md:block text-lg md:text-2xl font-bold mb-4 text-white">Popular</h2>
             
-            <div className="flex flex-col">
-                {POPULAR_PROJECTS.map((item, index) => (
-                    <div 
-                        key={item.id}
-                        onMouseEnter={() => setHoverRow(item.id)}
-                        onMouseLeave={() => setHoverRow(null)}
-                        className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[16px_6fr_3fr_2fr_1fr] gap-3 md:gap-4 px-2 md:px-4 py-2 md:py-3 rounded-md hover:bg-[#ffffff1a] transition group items-center cursor-pointer"
-                    >
-                        {/* desktop number */}
-                        <div className="hidden md:flex text-gray-400 text-sm font-medium text-center w-4 justify-center items-center">
-                            {hoverRow === item.id ? <Play size={14} fill="white" className="text-white"/> : index + 1}
-                        </div>
+            {loading ? (
+                <div className="flex justify-center py-10">
+                    <Loader className="animate-spin text-spotify-green" size={32} />
+                </div>
+            ) : (
+                <div className="flex flex-col">
+                    {popularProjects.map((item, index) => (
+                        <div 
+                            key={item._id || item.id}
+                            onClick={() => handleProjectClick(item)} // add click handler
+                            onMouseEnter={() => setHoverRow(item._id || item.id)}
+                            onMouseLeave={() => setHoverRow(null)}
+                            className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[16px_6fr_3fr_2fr_1fr] gap-3 md:gap-4 px-2 md:px-4 py-2 md:py-3 rounded-md hover:bg-[#ffffff1a] transition group items-center cursor-pointer"
+                        >
+                            {/* desktop number */}
+                            <div className="hidden md:flex text-gray-400 text-sm font-medium text-center w-4 justify-center items-center">
+                                {hoverRow === (item._id || item.id) ? <Play size={14} fill="white" className="text-white"/> : index + 1}
+                            </div>
 
-                        {/* image & title */}
-                        <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
-                            <img src={item.image} alt={item.title} className="w-12 h-12 md:w-10 md:h-10 rounded-[4px] object-cover shrink-0" />
-                            <div className="flex flex-col truncate">
-                                <span className={`font-bold text-sm md:text-base truncate ${hoverRow === item.id ? 'text-spotify-green' : 'text-white'}`}>
-                                    {item.title}
-                                </span>
-                                <span className="text-xs text-gray-400 md:hidden truncate">
-                                    {item.tech} • {item.views} plays
-                                </span>
+                            {/* image & title */}
+                            <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+                                <img src={item.imageUrl} alt={item.title} className="w-12 h-12 md:w-10 md:h-10 rounded-[4px] object-cover shrink-0" />
+                                <div className="flex flex-col truncate">
+                                    <span className={`font-bold text-sm md:text-base truncate ${hoverRow === (item._id || item.id) ? 'text-spotify-green' : 'text-white'}`}>
+                                        {item.title}
+                                    </span>
+                                    <span className="text-xs text-gray-400 md:hidden truncate">
+                                        {Array.isArray(item.techStack) ? item.techStack.join(" • ") : item.tech} • {item.views || "1k"} plays
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* tech stack (desktop) */}
+                            <div className="hidden md:flex items-center text-gray-400 text-sm hover:text-white transition truncate">
+                                {Array.isArray(item.techStack) ? item.techStack.join(" • ") : item.tech}
+                            </div>
+
+                            {/* status (desktop) */}
+                            <div className="hidden md:flex text-gray-400 text-sm text-right md:text-left items-center">
+                                {item.year || "2025"}
+                            </div>
+
+                            {/* action (mobile & desktop) */}
+                            <div className="text-gray-400 text-sm text-center flex justify-end items-center">
+                                <button className="md:hidden p-2">
+                                    <MoreHorizontal size={20} />
+                                </button>
+                                <span className="hidden md:block text-xs font-mono">{item.views || "1,234"}</span>
                             </div>
                         </div>
-
-                        {/* tech stack (desktop) */}
-                        <div className="hidden md:flex items-center text-gray-400 text-sm hover:text-white transition truncate">
-                            {item.tech}
-                        </div>
-
-                        {/* status (desktop) */}
-                        <div className="hidden md:flex text-gray-400 text-sm text-right md:text-left items-center">
-                            {item.status}
-                        </div>
-
-                        {/* action (mobile & desktop) */}
-                        <div className="text-gray-400 text-sm text-center flex justify-end items-center">
-                            <button className="md:hidden p-2">
-                                <MoreHorizontal size={20} />
-                            </button>
-                            <span className="hidden md:block text-xs font-mono">{item.views}</span>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
             
             <button className="mt-4 px-2 md:px-4 text-xs font-bold text-gray-400 hover:text-white tracking-widest uppercase hover:underline">
                 Show More
@@ -183,10 +181,10 @@ const Home = () => {
             <section className="bg-[#181818] p-5 md:p-6 rounded-lg hover:bg-[#282828] transition group cursor-pointer">
                 <h2 className="text-xl md:text-2xl font-bold mb-4 text-white">About</h2>
                 <div className="relative h-40 md:h-48 mb-4 rounded overflow-hidden shadow-lg">
-                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80')] bg-cover bg-center group-hover:scale-105 transition duration-700 opacity-60"></div>
-                     <div className="absolute bottom-3 left-4 font-bold text-2xl md:text-3xl text-white drop-shadow-md">
+                      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80')] bg-cover bg-center group-hover:scale-105 transition duration-700 opacity-60"></div>
+                      <div className="absolute bottom-3 left-4 font-bold text-2xl md:text-3xl text-white drop-shadow-md">
                         Coding with Passion.
-                     </div>
+                      </div>
                 </div>
                 <p className="text-gray-400 leading-relaxed text-sm line-clamp-3 md:line-clamp-none">
                     Hi, I'm a passionate Informatics student. I love exploring new technologies and building applications that solve real-world problems.
