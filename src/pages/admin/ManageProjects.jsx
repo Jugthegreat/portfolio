@@ -67,9 +67,9 @@ const ManageProjects = () => {
     },
     {
       name: "imageUrl",
-      label: "Image URL",
-      type: "text",
-      placeholder: "https://...",
+      label: "Image",
+      type: "image",
+      placeholder: "Upload or paste URL...",
     },
     {
       name: "techStack",
