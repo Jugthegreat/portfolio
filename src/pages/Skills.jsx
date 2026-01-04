@@ -4,21 +4,10 @@ import { motion } from 'framer-motion';
 import { Layout, Server, Database, Code, Wrench, Layers, Loader } from 'lucide-react'; 
 import PageTransition from '../components/PageTransition';
 
-// import all icons used
-import { 
-  SiReact, SiVuedotjs, SiTailwindcss, SiFramer, 
-  SiNodedotjs, SiExpress, SiLaravel, SiGo,
-  SiMongodb, SiMysql, SiFirebase, SiAmazonwebservices,
-  SiGithub, SiDocker, SiFigma, SiPostman
-} from "react-icons/si";
-
-// icon mapping dictionary
-const ICON_MAP = {
-  SiReact, SiVuedotjs, SiTailwindcss, SiFramer,
-  SiNodedotjs, SiExpress, SiLaravel, SiGo,
-  SiMongodb, SiMysql, SiFirebase, SiAmazonwebservices,
-  SiGithub, SiDocker, SiFigma, SiPostman
-};
+// import simple icons (Si...)
+import * as SiIcons from "react-icons/si";
+// import vscode icons (Vsc...)
+import * as VscIcons from "react-icons/vsc";
 
 // category icon mapping
 const CATEGORY_ICON_MAP = {
@@ -70,7 +59,7 @@ const Skills = () => {
                 <Layers size={16} className="text-pink-400 fill-white" />{" "}
                 Proficiency
               </span>
-              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-2xl leading-tight">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl  font-black tracking-tighter text-white drop-shadow-2xl leading-tight">
                 Tech Stack
               </h1>
               <p className="text-gray-300 font-medium text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
@@ -119,7 +108,9 @@ const Skills = () => {
                    {/* icon grid - using mapping */}
                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                      {stack.items.map((tech, i) => {
-                       const IconComponent = ICON_MAP[tech.iconKey] || Code;
+                       // logic update: check simple icons first, then vscode icons
+                       const IconComponent = SiIcons[tech.iconKey] || VscIcons[tech.iconKey] || Code;
+                       
                        return (
                          <div
                            key={i}
