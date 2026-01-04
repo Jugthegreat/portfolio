@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, BadgeCheck, ExternalLink, X, FileText } from 'lucide-react';
+import { Award, BadgeCheck, ExternalLink, X, FileText, Star } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 
 // --- DATA DUMMY ---
@@ -52,16 +52,45 @@ const Certificates = () => {
 
   return (
     <PageTransition>
-      <div className="h-full overflow-y-auto custom-scrollbar bg-gradient-to-b from-[#1e1e1e] to-[#121212] pb-32">
+      <div className="h-full overflow-y-auto custom-scrollbar bg-[#121212] pb-32 md:pb-0">
          
          {/* header */}
-         <div className="px-6 pt-20 md:pt-8 pb-6 bg-gradient-to-b from-[#eed17b] via-[#d7a332] to-[#121212]">
-            <h1 className="text-4xl md:text-5xl font-black text-white mb-2">Certificates</h1>
-            <p className="text-gray-400">Professional credentials and awards.</p>
-         </div>
+         <section className="relative pt-20 md:pt-24 pb-6 px-4 md:px-8 bg-gradient-to-b from-[#d7a332] via-[#8a6820] to-[#121212] flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 transition-all">
+            
+            {/* cover image */}
+            <div className="shrink-0 shadow-[0_8px_40px_rgba(0,0,0,0.6)] md:shadow-2xl mx-auto md:mx-0">
+              <img
+                src="https://images.unsplash.com/photo-1635352723068-ffb3b922397f?q=80&w=500" 
+                alt="Certificates Cover"
+                className="w-[200px] h-[200px] md:w-60 md:h-60 object-cover shadow-2xl rounded-md md:rounded-none"
+              />
+            </div>
+
+            {/* metadata text */}
+            <div className="flex flex-col gap-1 text-left w-full">
+              <span className="uppercase text-[10px] md:text-xs font-bold tracking-widest text-white hidden md:block">
+                Achievements
+              </span>
+
+              <h1 className="text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter text-white drop-shadow-lg mb-1 md:mb-2">
+                Certificates
+              </h1>
+
+              <p className="text-gray-300/90 text-xs md:text-sm font-medium max-w-xl">
+                Professional credentials, badges, and awards.
+              </p>
+
+              <div className="flex items-center gap-1 text-xs md:text-sm text-gray-300 mt-2 font-medium">
+                <Star size={16} className="text-yellow-400 fill-white" />
+                <span>Certified</span>
+                <span className="mx-1">•</span>
+                <span>{CERTIFICATES_DATA.length} credentials</span>
+              </div>
+            </div>
+         </section>
 
          {/* grid certificates */}
-         <div className="px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+         <div className="px-4 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 pb-24">
             {CERTIFICATES_DATA.map((cert, idx) => (
                <motion.div 
                  key={cert.id} 
@@ -100,7 +129,6 @@ const Certificates = () => {
          <AnimatePresence>
             {selectedCert && (
                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                  
                   {/* backdrop */}
                   <motion.div 
                      initial={{ opacity: 0 }}
@@ -134,10 +162,7 @@ const Certificates = () => {
                      </div>
 
                      <div className="w-full md:w-[45%] flex flex-col h-full bg-[#181818] min-h-0">
-                        
                         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-6">
-                           
-                           {/* title & issuer */}
                            <div className="mb-4">
                               <div className="flex items-center gap-2 mb-2">
                                  <span className="bg-yellow-900/30 text-yellow-500 text-[10px] font-bold px-2 py-0.5 rounded border border-yellow-700/50 uppercase">
@@ -145,7 +170,6 @@ const Certificates = () => {
                                  </span>
                                  <span className="text-gray-500 text-xs font-mono">{selectedCert.date}</span>
                               </div>
-                              {/* title in mobile */}
                               <h2 className="text-xl md:text-2xl font-bold text-white leading-tight mb-2">{selectedCert.title}</h2>
                               <div className="flex items-center gap-2 text-blue-400">
                                  <BadgeCheck size={16} />
@@ -153,21 +177,18 @@ const Certificates = () => {
                               </div>
                            </div>
 
-                           {/* deskripsi */}
                            <div className="bg-[#242424] p-3 rounded-lg mb-4 border border-[#2a2a2a]">
                               <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
                                  {selectedCert.description}
                               </p>
                            </div>
 
-                           {/* ID kredensial */}
                            <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-500 font-mono bg-[#242424] p-2 rounded border border-[#2a2a2a]">
                               <span className="font-bold">ID:</span>
                               <span className="text-gray-300 select-all truncate ml-2">{selectedCert.credentialId}</span>
                            </div>
                         </div>
 
-                        {/* footer */}
                         <div className="p-4 border-t border-[#2a2a2a] bg-[#181818] shrink-0">
                            <a 
                               href={selectedCert.verifyLink} 
@@ -179,12 +200,10 @@ const Certificates = () => {
                            </a>
                         </div>
                      </div>
-
                   </motion.div>
                </div>
             )}
          </AnimatePresence>
-
       </div>
     </PageTransition>
   );
