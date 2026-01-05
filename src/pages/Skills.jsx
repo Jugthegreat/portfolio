@@ -41,7 +41,8 @@ const Skills = () => {
       <div className="h-full overflow-y-auto bg-[#121212] pb-32 md:pb-0 custom-scrollbar">
 
         {/* header consistent with home */}
-        <div className="relative bg-gradient-to-b from-[#ad4373] via-[#752d4e] to-[#121212] pt-24 pb-12 px-6 md:px-10 lg:px-14 flex flex-col md:flex-row items-end gap-6 md:gap-10 transition-colors duration-500">
+        {/* updated gradient to orange theme */}
+        <div className="relative bg-gradient-to-b from-[#ea580c] via-[#9a3412] to-[#121212] pt-24 pb-12 px-6 md:px-10 lg:px-14 flex flex-col md:flex-row items-end gap-6 md:gap-10 transition-colors duration-500">
             
             {/* icon */}
             <motion.div
@@ -50,13 +51,15 @@ const Skills = () => {
               transition={{ duration: 0.5 }}
               className="w-32 h-32 md:w-52 md:h-52 bg-[#2a2a2a] shadow-[0_8px_40px_rgba(0,0,0,0.5)] rounded-full md:rounded-md flex items-center justify-center shrink-0 group hover:scale-105 transition-transform duration-500"
             >
-               <Layers className="text-pink-400 drop-shadow-md w-14 h-14 md:w-24 md:h-24 group-hover:rotate-12 transition-transform duration-500"/>
+               {/* updated icon color to orange */}
+               <Layers className="text-orange-500 drop-shadow-md w-14 h-14 md:w-24 md:h-24 group-hover:rotate-12 transition-transform duration-500"/>
             </motion.div>
 
             {/* title */}
             <div className="flex flex-col gap-2 w-full z-10 pb-1">
               <span className="text-xs font-bold tracking-widest uppercase text-white flex items-center gap-1.5">
-                <Layers size={16} className="text-pink-400 fill-white" />{" "}
+                {/* updated icon fill to orange */}
+                <Layers size={16} className="text-orange-500 fill-white" />{" "}
                 Proficiency
               </span>
               <h1 className="text-4xl sm:text-6xl md:text-7xl  font-black tracking-tighter text-white drop-shadow-2xl leading-tight">
@@ -72,7 +75,8 @@ const Skills = () => {
         <div className="px-4 md:px-8 pb-24 mt-6">
           {loading ? (
              <div className="flex justify-center py-10">
-                <Loader className="animate-spin text-pink-400" size={32}/>
+                {/* updated loader color to orange */}
+                <Loader className="animate-spin text-orange-500" size={32}/>
              </div>
           ) : (
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
