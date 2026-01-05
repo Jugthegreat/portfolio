@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Library, Plus, ArrowLeft, Search, Pin, 
-  Briefcase, GraduationCap, Award, Heart, Code, X, Mail
+  Briefcase, GraduationCap, Award, Heart, Layers3, X, Mail
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
@@ -85,7 +85,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       id: 'tech',
       title: 'Tech Stack',
       subtitle: 'Skills & Tools',
-      icon: <Code size={20} className="text-orange-400" />,
+      icon: <Layers3 size={20} className="text-orange-400" />,
       bg: 'bg-[#2a2a2a]',
       path: '/skills'
     },
