@@ -22,11 +22,11 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const [projRes, expRes, eduRes, certRes, skillRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/projects'),
-          axios.get('http://localhost:5000/api/experience'),
-          axios.get('http://localhost:5000/api/education'),
-          axios.get('http://localhost:5000/api/certificates'),
-          axios.get('http://localhost:5000/api/skills')
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/projects'),
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/experience'),
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/education'),
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/certificates'),
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/skills')
         ]);
 
         setStats({

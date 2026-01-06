@@ -30,7 +30,7 @@ const ManageEducation = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/education');
+      const res = await axios.get('https://portfolio-be-five-dun.vercel.app/api/education');
       setData(res.data);
     } catch (error) {
       toast.error("failed to load education");
@@ -54,7 +54,7 @@ const ManageEducation = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("are you sure?")) return;
     try {
-        await axios.delete(`http://localhost:5000/api/education/${id}`);
+        await axios.delete(`https://portfolio-be-five-dun.vercel.app/api/education/${id}`);
         toast.success("deleted successfully");
         fetchData();
     } catch (error) {
@@ -66,10 +66,10 @@ const ManageEducation = () => {
     setIsSubmitting(true);
     try {
         if (editItem) {
-            await axios.put(`http://localhost:5000/api/education/${editItem._id}`, formData);
+            await axios.put(`https://portfolio-be-five-dun.vercel.app/api/education/${editItem._id}`, formData);
             toast.success("updated successfully");
         } else {
-            await axios.post('http://localhost:5000/api/education', formData);
+            await axios.post('https://portfolio-be-five-dun.vercel.app/api/education', formData);
             toast.success("created successfully");
         }
         setIsModalOpen(false);

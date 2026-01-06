@@ -11,7 +11,7 @@ const Education = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/education");
+        const res = await axios.get("https://portfolio-be-five-dun.vercel.app/api/education");
         setEducationData(res.data);
       } catch (error) {
         console.error("error fetching education:", error);

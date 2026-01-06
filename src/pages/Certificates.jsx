@@ -12,7 +12,7 @@ const Certificates = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/certificates");
+        const res = await axios.get("https://portfolio-be-five-dun.vercel.app/api/certificates");
         setCertificates(res.data);
       } catch (error) {
         console.error("error fetching certificates:", error);

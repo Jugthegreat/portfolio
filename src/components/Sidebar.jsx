@@ -54,8 +54,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     const fetchCounts = async () => {
       try {
         const [projectsRes, certificatesRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/projects'),
-          axios.get('http://localhost:5000/api/certificates')
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/projects'),
+          axios.get('https://portfolio-be-five-dun.vercel.app/api/certificates')
         ]);
         setProjectCount(projectsRes.data.length);
         setCertificateCount(certificatesRes.data.length);

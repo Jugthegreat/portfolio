@@ -22,8 +22,8 @@ const Home = () => {
     const fetchData = async () => {
         try {
             const [projectsRes, educationRes] = await Promise.all([
-                axios.get("http://localhost:5000/api/projects"),
-                axios.get("http://localhost:5000/api/education")
+                axios.get("https://portfolio-be-five-dun.vercel.app/api/projects"),
+                axios.get("https://portfolio-be-five-dun.vercel.app/api/education")
             ]);
             // sort by views or just take first 5 as 'popular'
             const projectsData = projectsRes.data || [];

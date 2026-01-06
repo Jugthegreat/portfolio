@@ -23,7 +23,7 @@ const Projects = () => {
     // fetch data from backend api
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/projects");
+        const res = await axios.get("https://portfolio-be-five-dun.vercel.app/api/projects");
         setProjects(res.data);
       } catch (error) {
         console.error("error fetching projects:", error);

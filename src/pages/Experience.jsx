@@ -12,7 +12,7 @@ const Experience = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/experience");
+        const res = await axios.get("https://portfolio-be-five-dun.vercel.app/api/experience");
         setExperienceData(res.data);
       } catch (error) {
         console.error("error fetching experience:", error);

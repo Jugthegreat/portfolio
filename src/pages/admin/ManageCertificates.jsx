@@ -74,7 +74,7 @@ const ManageCertificates = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/certificates");
+      const res = await axios.get("https://portfolio-be-five-dun.vercel.app/api/certificates");
       setData(res.data);
     } catch (error) {
       toast.error("failed to load certificates");
@@ -104,7 +104,7 @@ const ManageCertificates = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("delete this certificate?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/certificates/${id}`);
+      await axios.delete(`https://portfolio-be-five-dun.vercel.app/api/certificates/${id}`);
       toast.success("certificate deleted");
       fetchData();
     } catch (error) {
@@ -117,12 +117,12 @@ const ManageCertificates = () => {
     try {
       if (editItem) {
         await axios.put(
-          `http://localhost:5000/api/certificates/${editItem._id}`,
+          `https://portfolio-be-five-dun.vercel.app/api/certificates/${editItem._id}`,
           formData
         );
         toast.success("certificate updated");
       } else {
-        await axios.post("http://localhost:5000/api/certificates", formData);
+        await axios.post("https://portfolio-be-five-dun.vercel.app/api/certificates", formData);
         toast.success("certificate added");
       }
       setIsModalOpen(false);

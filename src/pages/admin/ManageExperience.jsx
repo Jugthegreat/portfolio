@@ -32,7 +32,7 @@ const ManageExperience = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/experience');
+      const res = await axios.get('https://portfolio-be-five-dun.vercel.app/api/experience');
       setData(res.data);
     } catch (error) {
       toast.error("failed to load experience");
@@ -56,7 +56,7 @@ const ManageExperience = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("are you sure you want to delete this experience?")) return;
     try {
-        await axios.delete(`http://localhost:5000/api/experience/${id}`);
+        await axios.delete(`https://portfolio-be-five-dun.vercel.app/api/experience/${id}`);
         toast.success("experience deleted");
         fetchData();
     } catch (error) {
@@ -68,10 +68,10 @@ const ManageExperience = () => {
     setIsSubmitting(true);
     try {
         if (editItem) {
-            await axios.put(`http://localhost:5000/api/experience/${editItem._id}`, formData);
+            await axios.put(`https://portfolio-be-five-dun.vercel.app/api/experience/${editItem._id}`, formData);
             toast.success("experience updated");
         } else {
-            await axios.post('http://localhost:5000/api/experience', formData);
+            await axios.post('https://portfolio-be-five-dun.vercel.app/api/experience', formData);
             toast.success("experience added");
         }
         setIsModalOpen(false);

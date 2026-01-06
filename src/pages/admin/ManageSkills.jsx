@@ -52,7 +52,7 @@ const ManageSkills = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/skills');
+      const res = await axios.get('https://portfolio-be-five-dun.vercel.app/api/skills');
       // transform: combine name, iconKey, and color back to string for editing
       const formattedData = res.data.map(cat => ({
           ...cat,
@@ -82,7 +82,7 @@ const ManageSkills = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("delete this skill category?")) return;
     try {
-        await axios.delete(`http://localhost:5000/api/skills/${id}`);
+        await axios.delete(`https://portfolio-be-five-dun.vercel.app/api/skills/${id}`);
         toast.success("category deleted");
         fetchData();
     } catch (error) {
@@ -119,10 +119,10 @@ const ManageSkills = () => {
 
     try {
         if (editItem) {
-            await axios.put(`http://localhost:5000/api/skills/${editItem._id}`, payload);
+            await axios.put(`https://portfolio-be-five-dun.vercel.app/api/skills/${editItem._id}`, payload);
             toast.success("skills updated");
         } else {
-            await axios.post('http://localhost:5000/api/skills', payload);
+            await axios.post('https://portfolio-be-five-dun.vercel.app/api/skills', payload);
             toast.success("skills category created");
         }
         setIsModalOpen(false);

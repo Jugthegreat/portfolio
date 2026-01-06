@@ -135,7 +135,7 @@ const ManageProjects = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/projects");
+      const res = await axios.get("https://portfolio-be-five-dun.vercel.app/api/projects");
       setData(res.data);
     } catch (error) {
       toast.error("Failed to load projects");
@@ -167,7 +167,7 @@ const ManageProjects = () => {
     if (!window.confirm("Are you sure you want to delete this project?"))
       return;
     try {
-      await axios.delete(`http://localhost:5000/api/projects/${id}`);
+      await axios.delete(`https://portfolio-be-five-dun.vercel.app/api/projects/${id}`);
       toast.success("Project deleted successfully");
       fetchData();
     } catch (error) {
@@ -181,13 +181,13 @@ const ManageProjects = () => {
       if (editItem) {
         // update
         await axios.put(
-          `http://localhost:5000/api/projects/${editItem._id}`,
+          `https://portfolio-be-five-dun.vercel.app/api/projects/${editItem._id}`,
           formData
         );
         toast.success("Project updated!");
       } else {
         // create
-        await axios.post("http://localhost:5000/api/projects", formData);
+        await axios.post("https://portfolio-be-five-dun.vercel.app/api/projects", formData);
         toast.success("Project created!");
       }
       setIsModalOpen(false);
