@@ -75,7 +75,7 @@ const Header = () => {
 
       {/* right section */}
       <div className="flex-1 flex justify-end gap-3">
-        <button onClick={() => navigate("/contact")} className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold hidden lg:block">
+        <button onClick={() => navigate("/contact")} className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold hidden lg:block transition-all transform hover:scale-105 active:scale-95">
           Get In Touch
         </button>
         <div className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center font-bold text-xs">
