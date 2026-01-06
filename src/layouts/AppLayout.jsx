@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'; 
-import { Search, Library, Menu, LayoutGrid } from 'lucide-react'; 
+import { Search, Library, Menu, LayoutGrid, Mail } from 'lucide-react'; 
 
 import Sidebar from '../components/Sidebar';
 import RightSidebar from '../components/RightSidebar';
@@ -116,9 +116,9 @@ const MobileNav = () => {
             <LayoutGrid size={24} />
             <span className="text-[10px] font-medium">Projects</span>
         </button>
-        <button onClick={() => navigate('/experience')} className={`flex flex-col items-center gap-1 ${isActive('/experience')}`}>
-            <Library size={24} />
-            <span className="text-[10px] font-medium">Library</span>
+        <button onClick={() => navigate('/contact')} className={`flex flex-col items-center gap-1 ${isActive('/contact')}`}>
+            <Mail size={24} />
+            <span className="text-[10px] font-medium">Contact</span>
         </button>
     </div>
   );
