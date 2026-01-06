@@ -51,7 +51,6 @@ const Header = () => {
       </div>
 
       {/* center section */}
-      {/* PERBAIKAN: w-[calc(100%-120px)] memberikan margin lebih besar (60px kiri-kanan) agar tidak nabrak */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-120px)] md:w-full max-w-[420px] flex gap-2">
         <button
           onClick={() => navigate('/')}
@@ -78,9 +77,7 @@ const Header = () => {
         <button onClick={() => navigate("/contact")} className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold hidden lg:block transition-all transform hover:scale-105 active:scale-95">
           Get In Touch
         </button>
-        <div className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center font-bold text-xs">
-          F
-        </div>
+        <img src="/icon-spotify.png" alt="Spotify Icon" className="w-8 h-8 rounded-full" />
       </div>
     </div>
   );
