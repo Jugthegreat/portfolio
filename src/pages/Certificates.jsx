@@ -61,7 +61,7 @@ const Certificates = () => {
                   <Loader className="animate-spin text-yellow-400" size={32}/>
                </div>
             ) : (
-               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+               <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                   {certificates.map((cert, idx) => (
                      <motion.div 
                        key={cert._id || cert.id} 
@@ -70,7 +70,7 @@ const Certificates = () => {
                        transition={{ delay: idx * 0.1 }}
                        whileHover={{ scale: 1.02 }}
                        onClick={() => setSelectedCert(cert)}
-                       className="group bg-[#181818] hover:bg-[#282828] p-4 rounded-lg transition cursor-pointer relative overflow-hidden border border-transparent hover:border-[#333] flex flex-col h-full gap-4"
+                       className="group bg-[#181818] hover:bg-[#282828] p-3 md:p-4 rounded-lg transition cursor-pointer relative overflow-hidden border border-transparent hover:border-[#333] flex flex-col h-full gap-4"
                      >
                         {/* image preview area */}
                         <div className="relative w-full aspect-[4/3] bg-black/20 rounded-md overflow-hidden border border-[#333]">
@@ -87,7 +87,7 @@ const Certificates = () => {
 
                         {/* content area */}
                         <div className="flex flex-col flex-1">
-                            <h3 className="font-bold text-white text-lg line-clamp-2 mb-1 group-hover:text-yellow-500 transition leading-tight">
+                            <h3 className="font-bold text-white text-sm md:text-lg line-clamp-2 mb-1 group-hover:text-yellow-500 transition leading-tight">
                                 {cert.title}
                             </h3>
                             
