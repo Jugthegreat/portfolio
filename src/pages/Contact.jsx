@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import emailjs from '@emailjs/browser';
 import {
   Mail,
   MapPin,
@@ -10,10 +11,11 @@ import {
   ArrowUpRight,
   MessageSquare,
   CheckCircle2,
+  X,
+  Loader 
 } from "lucide-react";
 import PageTransition from "../components/PageTransition";
 
-// --- DATA SOCIAL MEDIA ---
 const SOCIAL_LINKS = [
   {
     id: 1,
@@ -43,13 +45,19 @@ const SOCIAL_LINKS = [
 
 const Contact = () => {
   const [focusedField, setFocusedField] = useState(null);
-
-  // autofill style not used directly but kept for reference if needed
-  const autofillStyle = {
-    WebkitBoxShadow: "0 0 0 30px #2a2a2a inset",
-    WebkitTextFillColor: "white",
-    caretColor: "white",
-  };
+  const form = useRef(); 
+  
+  // form state
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  
+  // popup & loading state
+  const [showPopup, setShowPopup] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,9 +72,67 @@ const Contact = () => {
     visible: { y: 0, opacity: 1 },
   };
 
+  // handle input change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // handle form submit using emailjs
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.message) {
+        alert("Please fill in all required fields!");
+        return;
+    }
+
+    setIsSending(true);
+
+    emailjs.sendForm(
+        'service_sendmessage', 
+        'template_sendmessage', 
+        form.current, 
+        'UqwnmlVw39j50jK_K'
+    )
+    .then((result) => {
+        // success
+        setIsSending(false);
+        setShowPopup(true);
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setTimeout(() => setShowPopup(false), 5000);
+    }, (error) => {
+        // error
+        setIsSending(false);
+        console.error(error.text);
+        alert("Failed to send message. Please try again.");
+    });
+  };
+
   return (
     <PageTransition>
       <div className="h-full overflow-y-auto custom-scrollbar bg-[#121212] pb-32">
+        
+        {/* success popup */}
+        <AnimatePresence>
+            {showPopup && (
+                <motion.div
+                    initial={{ opacity: 0, y: -50, x: "-50%" }}
+                    animate={{ opacity: 1, y: 0, x: "-50%" }}
+                    exit={{ opacity: 0, y: -50, x: "-50%" }}
+                    className="fixed top-10 left-1/2 z-50 bg-[#1ed760] text-black px-6 py-4 rounded-lg shadow-2xl flex items-center gap-4 min-w-[300px]"
+                >
+                    <CheckCircle2 size={24} />
+                    <div className="flex-1">
+                        <h4 className="font-bold text-sm">Message Sent!</h4>
+                        <p className="text-xs font-medium opacity-80">Thank you for reaching out.</p>
+                    </div>
+                    <button onClick={() => setShowPopup(false)} className="hover:bg-black/10 p-1 rounded-full transition">
+                        <X size={18} />
+                    </button>
+                </motion.div>
+            )}
+        </AnimatePresence>
+
         {/* header */}
         <div className="relative bg-gradient-to-b from-[#535353] via-[#2a2a2a] to-[#121212] pt-24 pb-12 px-6 md:px-10 lg:px-14 flex flex-col md:flex-row items-end gap-6 md:gap-10 transition-colors duration-500">
           {/* icon - changed gradient to pink */}
@@ -116,25 +182,16 @@ const Contact = () => {
             {/* featured email card */}
             <motion.div
               variants={itemVariants}
-              // P-4 di mobile, P-5 di desktop agar tidak terlalu sempit
               className="bg-[#181818] hover:bg-[#282828] p-4 md:p-5 rounded-lg group transition duration-300 border border-transparent hover:border-[#333] cursor-pointer"
             >
               <div className="flex items-center gap-3 md:gap-5">
-                {/* Icon: Lebih kecil di Mobile (w-10/w-12) agar hemat ruang - changed to pink bg */}
                 <div className="w-12 h-12 md:w-14 md:h-14 bg-pink-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition shrink-0">
                   <Mail className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
-
-                {/* Text Area */}
                 <div className="overflow-hidden min-w-0 flex-1">
                   <p className="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-0.5 md:mb-1 group-hover:text-pink-400 transition">
                     Primary Email
                   </p>
-
-                  {/* Email Link: 
-                - text-sm (Mobile) -> text-base (Tablet) -> text-xl (Desktop) 
-                - truncate: Memotong teks jika masih kepanjangan (...)
-            */}
                   <a
                     href="mailto:fatiyalabibah17@gmail.com"
                     className="text-white font-bold text-sm sm:text-base md:text-xl hover:underline truncate block"
@@ -206,7 +263,7 @@ const Contact = () => {
               </span>
             </div>
 
-            <form className="space-y-6">
+            <form ref={form} className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2 group">
                   <label
@@ -218,13 +275,16 @@ const Contact = () => {
                   >
                     NAME
                   </label>
-                  {/* HAPUS style={autofillStyle} */}
                   <input
                     type="text"
+                    name="name" // must match emailjs template variable
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder="What's your name?"
                     onFocus={() => setFocusedField("name")}
                     onBlur={() => setFocusedField(null)}
                     className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 shadow-sm"
+                    required
                   />
                 </div>
 
@@ -241,10 +301,14 @@ const Contact = () => {
                   </label>
                   <input
                     type="email"
+                    name="email" // must match emailjs template variable
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="name@example.com"
                     onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
                     className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 shadow-sm"
+                    required
                   />
                 </div>
               </div>
@@ -262,6 +326,9 @@ const Contact = () => {
                 </label>
                 <input
                   type="text"
+                  name="subject" // must match emailjs template variable
+                  value={formData.subject}
+                  onChange={handleChange}
                   placeholder="Project Inquiry / Collab"
                   onFocus={() => setFocusedField("subject")}
                   onBlur={() => setFocusedField(null)}
@@ -282,17 +349,22 @@ const Contact = () => {
                 </label>
                 <textarea
                   rows="5"
+                  name="message" // must match emailjs template variable
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Tell me more about your project..."
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 resize-none shadow-sm"
+                  required
                 ></textarea>
               </div>
 
               {/* submit button - pink style */}
               <div className="pt-2 flex justify-end">
                 <button
-                  type="button"
+                  type="submit"
+                  disabled={isSending}
                   className="
                                 w-full md:w-auto
                                 bg-pink-600 hover:bg-pink-500 text-white font-bold 
@@ -300,9 +372,14 @@ const Contact = () => {
                                 transition-all transform hover:scale-105 active:scale-95 
                                 flex items-center justify-center gap-2 
                                 shadow-lg shadow-pink-900/20
+                                disabled:opacity-50 disabled:cursor-not-allowed
                             "
                 >
-                  Send Message <Send size={18} strokeWidth={2.5} />
+                  {isSending ? (
+                      <>Sending... <Loader className="animate-spin" size={18}/></>
+                  ) : (
+                      <>Send Message <Send size={18} strokeWidth={2.5} /></>
+                  )}
                 </button>
               </div>
             </form>
