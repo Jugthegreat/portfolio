@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { 
   Play, Pause, SkipBack, SkipForward, 
-  Heart, Github, ExternalLink, Share2, Info 
-} from 'lucide-react';
+  Heart, Github, ExternalLink, Share2, Info, X, CheckCircle2, 
+  Link, Linkedin, MessageCircle, Twitter
+} from 'lucide-react'; // added social icons
+import { motion, AnimatePresence } from 'framer-motion';
 
 const PlayerBar = ({ project, onOpenMobilePlayer }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   
   if (!project) return null;
 
@@ -18,9 +22,64 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
     if (url) window.open(url, "_blank");
   };
 
-  const copyLink = (e) => {
+  const openShareModal = (e) => {
     e.stopPropagation();
-    alert(`Link to ${project.title} copied to clipboard!`);
+    setShowShareModal(true);
+  };
+
+  // 1. copy link function
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShowShareModal(false);
+      setShowSuccessPopup(true);
+      setTimeout(() => setShowSuccessPopup(false), 3000);
+    } catch (error) {
+      alert('Failed to copy link');
+    }
+  };
+
+  // 2. social media share logic
+  const shareToSocial = (platform) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out this project: ${project.title} by Fatiya Labibah`);
+    
+    let shareUrl = "";
+
+    switch (platform) {
+        case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${text}%20${url}`;
+            break;
+        case 'linkedin':
+            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            break;
+        default:
+            return;
+    }
+
+    window.open(shareUrl, '_blank');
+    setShowShareModal(false);
+  };
+
+  // 3. native system share (mobile friendly)
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: project.title,
+                text: `Check out this project: ${project.title}`,
+                url: window.location.href,
+            });
+            setShowShareModal(false);
+        } catch (error) {
+            console.log('Error sharing:', error);
+        }
+    } else {
+        alert("Web Share API not supported in this browser");
+    }
   };
 
   return (
@@ -84,7 +143,7 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
              <button onClick={() => openLink(project.demoLink)} className="hover:text-white hover:scale-110 transition p-2" title="Live Demo">
                 <ExternalLink size={18}/>
              </button>
-             <button onClick={copyLink} className="hover:text-white hover:scale-110 transition p-2" title="Share">
+             <button onClick={openShareModal} className="hover:text-white hover:scale-110 transition p-2" title="Share">
                 <Share2 size={18}/>
              </button>
              <div className="w-[1px] h-4 bg-gray-700 mx-1"></div>
@@ -108,7 +167,7 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-              <button className="text-gray-300 hover:text-white" onClick={copyLink}>
+              <button className="text-gray-300 hover:text-white" onClick={openShareModal}>
                   <Share2 size={20} />
               </button>
               
@@ -121,6 +180,127 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
              <div className="h-full bg-white w-1/3 rounded-full"></div>
           </div>
       </div>
+
+      {/* share modal */}
+      <AnimatePresence>
+        {showShareModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowShareModal(false)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="bg-[#181818] w-full max-w-sm rounded-xl border border-[#333] shadow-2xl overflow-hidden relative z-10"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-white">Share Project</h3>
+                  <button onClick={() => setShowShareModal(false)} className="text-gray-400 hover:text-white">
+                    <X size={24} />
+                  </button>
+                </div>
+                
+                <div className="flex flex-col gap-3">
+                  {/* copy link */}
+                  <button 
+                    onClick={copyLink}
+                    className="flex items-center gap-4 p-3 bg-[#2a2a2a] hover:bg-[#3E3E3E] rounded-lg transition group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white group-hover:scale-110 transition">
+                        <Link size={20} />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-white text-sm">Copy Link</div>
+                    </div>
+                  </button>
+
+                  {/* whatsapp */}
+                  <button 
+                    onClick={() => shareToSocial('whatsapp')}
+                    className="flex items-center gap-4 p-3 bg-[#2a2a2a] hover:bg-[#3E3E3E] rounded-lg transition group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white group-hover:scale-110 transition">
+                        <MessageCircle size={20} />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-white text-sm">WhatsApp</div>
+                    </div>
+                  </button>
+
+                  {/* linkedin */}
+                  <button 
+                    onClick={() => shareToSocial('linkedin')}
+                    className="flex items-center gap-4 p-3 bg-[#2a2a2a] hover:bg-[#3E3E3E] rounded-lg transition group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white group-hover:scale-110 transition">
+                        <Linkedin size={20} />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-white text-sm">LinkedIn</div>
+                    </div>
+                  </button>
+
+                  {/* twitter / x */}
+                  <button 
+                    onClick={() => shareToSocial('twitter')}
+                    className="flex items-center gap-4 p-3 bg-[#2a2a2a] hover:bg-[#3E3E3E] rounded-lg transition group"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-black border border-gray-600 flex items-center justify-center text-white group-hover:scale-110 transition">
+                        <Twitter size={20} />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-white text-sm">Twitter / X</div>
+                    </div>
+                  </button>
+                  
+                  {/* native share (only visible if supported) */}
+                  {navigator.share && (
+                      <button 
+                        onClick={handleNativeShare}
+                        className="flex items-center gap-4 p-3 bg-[#2a2a2a] hover:bg-[#3E3E3E] rounded-lg transition group"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white group-hover:scale-110 transition">
+                            <Share2 size={20} />
+                        </div>
+                        <div className="text-left">
+                          <div className="font-bold text-white text-sm">More Options...</div>
+                        </div>
+                      </button>
+                  )}
+
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* success popup */}
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: -50, x: "-50%" }}
+            className="fixed top-10 left-1/2 z-50 bg-[#1ed760] text-black px-6 py-4 rounded-lg shadow-2xl flex items-center gap-4 min-w-[300px]"
+          >
+            <CheckCircle2 size={24} />
+            <div className="flex-1">
+              <h4 className="font-bold text-sm">Link Copied!</h4>
+              <p className="text-xs font-medium opacity-80">Ready to share with the world.</p>
+            </div>
+            <button onClick={() => setShowSuccessPopup(false)} className="hover:bg-black/10 p-1 rounded-full transition">
+              <X size={18} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
