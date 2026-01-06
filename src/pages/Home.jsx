@@ -14,17 +14,22 @@ const Home = () => {
   
   // state for data
   const [popularProjects, setPopularProjects] = useState([]);
+  const [educationData, setEducationData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // fetch data from backend
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/projects");
+            const [projectsRes, educationRes] = await Promise.all([
+                axios.get("http://localhost:5000/api/projects"),
+                axios.get("http://localhost:5000/api/education")
+            ]);
             // sort by views or just take first 5 as 'popular'
-            const data = res.data || [];
+            const projectsData = projectsRes.data || [];
             // limit to top 5
-            setPopularProjects(data.slice(0, 5));
+            setPopularProjects(projectsData.slice(0, 5));
+            setEducationData(educationRes.data || []);
         } catch (error) {
             console.error("error fetching home data:", error);
         } finally {
@@ -195,24 +200,17 @@ const Home = () => {
             <section className="bg-[#181818] p-5 md:p-6 rounded-lg hover:bg-[#282828] transition">
                 <h2 className="text-xl md:text-2xl font-bold mb-4 text-white">Education</h2>
                 <ul className="space-y-4">
-                    <li className="flex items-center gap-4">
-                        <div className="bg-[#333] p-3 rounded-full text-white shrink-0">
-                            <BadgeCheck size={20} />
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-white text-sm md:text-base">Informatics Engineering</h4>
-                            <p className="text-xs text-gray-400">Universitas Teknologi • 2023-2027</p>
-                        </div>
-                    </li>
-                    <li className="flex items-center gap-4">
-                        <div className="bg-[#333] p-3 rounded-full text-white shrink-0">
-                            <BadgeCheck size={20} />
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-white text-sm md:text-base">Full Stack Bootcamp</h4>
-                            <p className="text-xs text-gray-400">NF Academy • 2024</p>
-                        </div>
-                    </li>
+                    {educationData.slice(0, 2).map((edu, idx) => (
+                        <li key={edu._id || idx} className="flex items-center gap-4">
+                            <div className="bg-[#333] p-3 rounded-full text-white shrink-0">
+                                <BadgeCheck size={20} />
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-white text-sm md:text-base">{edu.degree}</h4>
+                                <p className="text-xs text-gray-400">{edu.school} • {edu.year}</p>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
             </section>
 
