@@ -2,9 +2,10 @@
 
 > A dynamic personal portfolio website inspired by Spotify's UI/UX. Built with the MERN Stack, featuring a custom Admin Dashboard, Cloudinary image optimization, and fully responsive design.
 
+
 ![Portfolio Preview](./public/preview.png)
 
-# <img src="./src/icon-spotify.png" alt="Spotify Logo" width="43" height="43" /> Potfolio Spotify
+# <img src="./public/icon-spotify.png" alt="Spotify Logo" width="43" height="43" /> Potfolio Spotify
 
 ## 🚀 Live Demo
 - **Frontend:** [https://fatiyalabibah.vercel.app](https://portfolio-frontend-yours.vercel.app)
@@ -173,7 +174,6 @@ Developed by **Fatiya Labibah**.
 ---
 
 ⭐ **Don't forget to star this repo if you find it useful!**
+---
 
-```
-
-```
+*© 2025 WonderAI Project. All Rights Reserved.*
