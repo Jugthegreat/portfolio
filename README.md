@@ -5,7 +5,7 @@
 
 ![Portfolio Preview](./public/preview.png)
 
-# <img src="./public/icon-spotify.png" alt="Spotify Logo" width="43" height="43" /> Potfolio Spotify
+# <img src="./public/icon-spotify.png" alt="Spotify Logo" width="38" height="38" /> Potfolio Spotify
 
 ## 🚀 Live Demo
 - **Frontend:** [https://fatiyalabibah.vercel.app](https://portfolio-frontend-yours.vercel.app)
