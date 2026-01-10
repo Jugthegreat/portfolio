@@ -17,6 +17,7 @@ const Home = () => {
   const [popularProjects, setPopularProjects] = useState([]);
   const [educationData, setEducationData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   // fetch data from backend
   useEffect(() => {
@@ -39,6 +40,17 @@ const Home = () => {
     };
     fetchData();
   }, []);
+
+  // close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMoreMenu && !event.target.closest('.relative')) {
+        setShowMoreMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMoreMenu]);
 
   // handle click to show player & sidebar
   const handleProjectClick = (project) => {
@@ -114,9 +126,64 @@ const Home = () => {
             <button className="hidden md:block hover:text-white transition hover:scale-110" title="Download CV">
                 <ArrowDownCircle size={28} />
             </button>
-            <button className="hidden md:block hover:text-white transition" title="More">
+            <div className="relative">
+              <button 
+                onClick={() => setShowMoreMenu(!showMoreMenu)}
+                className="hidden md:block hover:text-white transition hover:scale-110 p-2 rounded-full hover:bg-white/10" 
+                title="More"
+              >
                 <MoreHorizontal size={32} />
-            </button>
+              </button>
+              
+              {/* dropdown menu */}
+              {showMoreMenu && (
+                <div className="absolute left-full top-0 ml-2 w-48 bg-[#282828] rounded-lg shadow-xl border border-[#3a3a3a] z-50">
+                  <div className="py-2">
+                    <button 
+                      onClick={() => {
+                        // download CV logic - you can add actual download here
+                        alert('Download CV functionality coming soon!');
+                        setShowMoreMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#3a3a3a] flex items-center gap-3"
+                    >
+                      <ArrowDownCircle size={16} />
+                      Download CV
+                    </button>
+                    <button 
+                      onClick={() => {
+                        navigate('/contact');
+                        setShowMoreMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#3a3a3a] flex items-center gap-3"
+                    >
+                      <Mail size={16} />
+                      Contact Me
+                    </button>
+                    <button 
+                      onClick={() => {
+                        window.open('https://github.com/fatiya17', '_blank');
+                        setShowMoreMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#3a3a3a] flex items-center gap-3"
+                    >
+                      <Github size={16} />
+                      GitHub
+                    </button>
+                    <button 
+                      onClick={() => {
+                        window.open('https://linkedin.com/in/fatiya-labibah', '_blank');
+                        setShowMoreMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#3a3a3a] flex items-center gap-3"
+                    >
+                      <Linkedin size={16} />
+                      LinkedIn
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
         </div>
 
         {/* mobile / desktop play button */}
