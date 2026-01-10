@@ -1,17 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, Pause, SkipBack, SkipForward, 
   Heart, Github, ExternalLink, Share2, Info, X, CheckCircle2, 
   Link, Linkedin, MessageCircle, Twitter
-} from 'lucide-react'; // added social icons
+} from 'lucide-react'; 
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PlayerBar = ({ project, onOpenMobilePlayer }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); 
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   
+  // audio state
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef(null);
+
   if (!project) return null;
+
+  // --- audio logic start ---
+
+  // handle play/pause when isPlaying changes
+  useEffect(() => {
+    if (audioRef.current) {
+        if (isPlaying) {
+            audioRef.current.play().catch(err => console.log("playback error:", err));
+        } else {
+            audioRef.current.pause();
+        }
+    }
+  }, [isPlaying]);
+
+  // reset and FORCE PLAY when project changes
+  useEffect(() => {
+    if(audioRef.current) {
+        audioRef.current.load(); 
+        
+        // force play immediately
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Auto-play prevented:", error);
+                setIsPlaying(false); // revert to pause if blocked
+            });
+        }
+        
+        setIsPlaying(true); // update UI state
+    }
+  }, [project]);
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+        setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+        setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+  };
+
+  // seek functionality
+  const handleSeek = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    const percentage = x / width;
+    const newTime = percentage * duration;
+    
+    if (audioRef.current) {
+        audioRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+    }
+  };
+
+  // format time mm:ss
+  const formatTime = (time) => {
+    if(isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
+  // fallback audio url to local file
+  const audioSource = project.audioUrl || "/Westlife - If I Let You Go.mp3";
+
+  // --- audio logic end ---
 
   const togglePlay = (e) => {
     e.stopPropagation();
@@ -84,6 +163,16 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
 
   return (
     <>
+      {/* hidden audio element with autoPlay attribute */}
+      <audio 
+        ref={audioRef}
+        src={audioSource}
+        autoPlay={true} 
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleEnded}
+      />
+
       <div className="hidden md:flex w-full h-[90px] bg-black border-t border-[#282828] px-4 z-50 items-center justify-between shrink-0">
           
           {/* info project */}
@@ -115,7 +204,7 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
                 </button>
                 
                 <button 
-                    onClick={() => setIsPlaying(!isPlaying)} 
+                    onClick={togglePlay} 
                     className="bg-white rounded-full p-2 hover:scale-105 active:scale-95 transition shadow-lg flex items-center justify-center"
                 >
                     {isPlaying ? <Pause fill="black" size={20} /> : <Play fill="black" size={20} className="ml-0.5" />}
@@ -127,11 +216,27 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
             </div>
             
             <div className="flex items-center gap-2 w-full text-xs text-gray-400 font-mono">
-                <span>0:00</span>
-                <div className="h-1 bg-[#4d4d4d] rounded-full w-full relative group cursor-pointer">
-                    <div className="absolute top-0 left-0 h-full bg-white rounded-full group-hover:bg-spotify-green transition-colors w-1/3"></div>
+                {/* current time */}
+                <span className="w-8 text-right">{formatTime(currentTime)}</span>
+                
+                {/* progress bar */}
+                <div 
+                    className="h-1 bg-[#4d4d4d] rounded-full w-full relative group cursor-pointer"
+                    onClick={handleSeek}
+                >
+                    <div 
+                        className="absolute top-0 left-0 h-full bg-white rounded-full group-hover:bg-spotify-green transition-colors"
+                        style={{ width: `${(currentTime / duration) * 100}%` }}
+                    ></div>
+                    {/* draggable thumb effect */}
+                    <div 
+                        className="hidden group-hover:block absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow"
+                        style={{ left: `${(currentTime / duration) * 100}%` }}
+                    ></div>
                 </div>
-                <span>Demo</span>
+                
+                {/* duration */}
+                <span className="w-8">{formatTime(duration)}</span>
             </div>
           </div>
 
@@ -162,7 +267,9 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
              <img src={project.imageUrl} alt="" className="w-10 h-10 rounded-[4px] object-cover shrink-0 block"/>
              <div className="flex flex-col min-w-0 flex-1">
                 <span className="text-white font-bold text-sm truncate pr-2 block">{project.title}</span>
-                <span className="text-xs text-gray-300 truncate block">{project.techStack?.[0]}</span>
+                <span className="text-xs text-gray-300 truncate block">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                </span>
              </div>
           </div>
 
@@ -177,7 +284,10 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
           </div>
           
           <div className="absolute bottom-0 left-2 right-2 h-[2px] bg-white/20 rounded-b-md overflow-hidden">
-             <div className="h-full bg-white w-1/3 rounded-full"></div>
+             <div 
+                className="h-full bg-white rounded-full transition-all duration-300"
+                style={{ width: `${(currentTime / duration) * 100}%` }}
+             ></div>
           </div>
       </div>
 

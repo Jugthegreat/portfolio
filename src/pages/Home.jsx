@@ -58,6 +58,21 @@ const Home = () => {
     setShowRightSidebar(true);
   };
 
+  // function to play the specific song "if i let you go"
+  const handlePlayMusic = () => {
+    // create a custom object for the song
+    const songData = {
+        _id: "special-song-01",
+        title: "If I Let You Go",
+        imageUrl: "/westlife-cover.jpg", 
+        techStack: ["Westlife"], 
+        audioUrl: "/Westlife - If I Let You Go.mp3", 
+        githubLink: "",
+        demoLink: ""
+    };
+    setSelectedProject(songData);
+  };
+
   return (
     <PageTransition>
     <div className="h-full overflow-y-auto custom-scrollbar bg-[#121212] pb-32 md:pb-0">
@@ -144,7 +159,7 @@ const Home = () => {
                   <div className="py-2">
                     <button 
                       onClick={() => {
-                        // download CV logic - you can add actual download here
+                        // download CV logic
                         alert('Download CV functionality coming soon!');
                         setShowMoreMenu(false);
                       }}
@@ -194,7 +209,10 @@ const Home = () => {
             <button className="md:hidden text-gray-400 hover:text-white">
                 <Shuffle size={24} />
             </button>
-            <button className="bg-spotify-green w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center hover:scale-105 hover:brightness-110 transition shadow-lg shadow-black/40 group">
+            <button 
+                onClick={handlePlayMusic}
+                className="bg-spotify-green w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center hover:scale-105 hover:brightness-110 transition shadow-lg shadow-black/40 group"
+            >
               <Play size={24} md:size={28} fill="black" className="text-black ml-1 group-hover:scale-105 transition" />
             </button>
         </div>
@@ -216,7 +234,7 @@ const Home = () => {
                     {popularProjects.map((item, index) => (
                         <div 
                             key={item._id || item.id}
-                            onClick={() => handleProjectClick(item)} // add click handler
+                            onClick={() => handleProjectClick(item)} 
                             onMouseEnter={() => setHoverRow(item._id || item.id)}
                             onMouseLeave={() => setHoverRow(null)}
                             className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[16px_6fr_3fr_2fr_1fr] gap-3 md:gap-4 px-2 md:px-4 py-2 md:py-3 rounded-md hover:bg-[#ffffff1a] transition group items-center cursor-pointer"
