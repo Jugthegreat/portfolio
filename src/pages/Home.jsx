@@ -44,7 +44,7 @@ const Home = () => {
   // close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showMoreMenu && !event.target.closest('.relative')) {
+      if (showMoreMenu && !event.target.closest('.dropdown-container')) {
         setShowMoreMenu(false);
       }
     };
@@ -126,7 +126,7 @@ const Home = () => {
             <button className="hidden md:block hover:text-white transition hover:scale-110" title="Download CV">
                 <ArrowDownCircle size={28} />
             </button>
-            <div className="relative">
+            <div className="dropdown-container relative">
               <button 
                 onClick={() => setShowMoreMenu(!showMoreMenu)}
                 className="hidden md:block hover:text-white transition hover:scale-110 p-2 rounded-full hover:bg-white/10" 
@@ -137,7 +137,10 @@ const Home = () => {
               
               {/* dropdown menu */}
               {showMoreMenu && (
-                <div className="absolute left-full top-0 ml-2 w-48 bg-[#282828] rounded-lg shadow-xl border border-[#3a3a3a] z-50">
+                <div 
+                  className="absolute left-full top-0 ml-2 w-48 bg-[#282828] rounded-lg shadow-xl border border-[#3a3a3a] z-50"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="py-2">
                     <button 
                       onClick={() => {
