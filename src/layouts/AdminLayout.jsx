@@ -10,6 +10,7 @@ import {
   LogOut,
   Menu,
   X,
+  BarChart2
 } from "lucide-react";
 
 const AdminLayout = () => {
@@ -26,6 +27,11 @@ const AdminLayout = () => {
       name: "Dashboard",
       path: "/admin/dashboard",
       icon: <LayoutDashboard size={20} />,
+    },
+    {
+      name: "Analytics", 
+      path: "/admin/analytics",
+      icon: <BarChart2 size={20} />,
     },
     {
       name: "Projects",
