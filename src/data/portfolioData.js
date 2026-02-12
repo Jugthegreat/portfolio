@@ -36,7 +36,7 @@ export const PROJECTS = [
     category: "Robotics, Controls",
     techStack: ["ROS2", "Python", "MAVROS", "PID Control"],
     description: "Capstone project developing autonomous docking capabilities for marine vehicles using advanced trajectory tracking controllers. Implemented sensor fusion and path planning algorithms for precise docking maneuvers.",
-    imageUrl: "/portfolio/images/projects/blueboat.jpg",
+    imageUrl: "/images/projects/blueboat.jpg",
     githubLink: "https://github.com/NextGen-Embodied-AI-Solutions-Lab/BlueboatProject.git",
     demoLink: "https://drive.google.com/file/d/1WmosU-8-qtgJhux9zgplU-LhhtNIlNtP/view",
     projectType: "Academic",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
