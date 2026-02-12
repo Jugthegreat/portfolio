@@ -127,7 +127,7 @@ const PlayerBar = ({ project, onOpenMobilePlayer }) => {
   // 2. social media share logic
   const shareToSocial = (platform) => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(`Check out this project: ${project.title} by Fatiya Labibah`);
+    const text = encodeURIComponent(`Check out this project: ${project.title} by Jugal Upadhyay`);
     
     let shareUrl = "";
 

@@ -242,22 +242,7 @@ const RightSidebar = ({ project, onClose, isMobileFull, isExpanded, onToggleExpa
                    </a>
               </div>
 
-              {/* credits */}
-              {!isExpanded && (
-                  <div className="bg-[#242424] rounded-lg p-4">
-                      <div className="flex justify-between items-end mb-4">
-                          <h3 className="font-bold text-base">Credits</h3>
-                          <span className="text-xs font-bold text-gray-400">Show all</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                          <div>
-                              <h4 className="font-bold text-sm">Fatiya Labibah</h4>
-                              <p className="text-xs text-gray-400">Creator</p>
-                          </div>
-                          <a href="https://github.com/fatiya17" target="_blank" rel="noopener noreferrer" className="border border-gray-600 px-3 py-1 rounded-full text-xs font-bold hover:border-white transition inline-block text-center">Follow</a>
-                      </div>
-                  </div>
-              )}
+
           </div>
       </div>
     </div>

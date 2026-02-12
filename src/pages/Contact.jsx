@@ -1,13 +1,11 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import emailjs from '@emailjs/browser';
 import {
   Mail,
   MapPin,
   Send,
   Linkedin,
   Github,
-  Instagram,
   ArrowUpRight,
   MessageSquare,
   CheckCircle2,
@@ -16,38 +14,13 @@ import {
 } from "lucide-react";
 import PageTransition from "../components/PageTransition";
 
-const SOCIAL_LINKS = [
-  {
-    id: 1,
-    name: "LinkedIn",
-    username: "Fatiya Labibah",
-    icon: <Linkedin size={20} />,
-    link: "https://www.linkedin.com/in/fatiya-labibah/",
-    color: "text-blue-400",
-  },
-  {
-    id: 2,
-    name: "GitHub",
-    username: "fatiya17",
-    icon: <Github size={20} />,
-    link: "https://github.com/fatiya17",
-    color: "text-white",
-  },
-  {
-    id: 3,
-    name: "Instagram",
-    username: "@dambelsbru_",
-    icon: <Instagram size={20} />,
-    link: "https://www.instagram.com/dambelsbru_/",
-    color: "text-pink-500",
-  },
-];
+// Import static data
+import { PROFILE, SOCIAL_LINKS } from '../data/portfolioData';
 
 const Contact = () => {
   const [focusedField, setFocusedField] = useState(null);
   const form = useRef(); 
   
-  // form state
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -55,7 +28,6 @@ const Contact = () => {
     message: ""
   });
   
-  // popup & loading state
   const [showPopup, setShowPopup] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
@@ -72,12 +44,10 @@ const Contact = () => {
     visible: { y: 0, opacity: 1 },
   };
 
-  // handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // handle form submit using emailjs
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -87,32 +57,27 @@ const Contact = () => {
     }
 
     setIsSending(true);
-
-    emailjs.sendForm(
-        'service_sendmessage', 
-        'template_sendmessage', 
-        form.current, 
-        'UqwnmlVw39j50jK_K'
-    )
-    .then((result) => {
-        // success
-        setIsSending(false);
-        setShowPopup(true);
-        setFormData({ name: "", email: "", subject: "", message: "" });
-        setTimeout(() => setShowPopup(false), 5000);
-    }, (error) => {
-        // error
-        setIsSending(false);
-        console.error(error.text);
-        alert("Failed to send message. Please try again.");
-    });
+    
+    // Simple mailto fallback - opens email client
+    const mailtoLink = `mailto:${PROFILE.email}?subject=${encodeURIComponent(formData.subject || 'Portfolio Contact')}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
+    window.open(mailtoLink);
+    
+    setIsSending(false);
+    setShowPopup(true);
+    setFormData({ name: "", email: "", subject: "", message: "" });
+    setTimeout(() => setShowPopup(false), 5000);
   };
+
+  const socialLinksWithIcons = SOCIAL_LINKS.map(social => ({
+    ...social,
+    icon: social.name === 'LinkedIn' ? <Linkedin size={20} /> : 
+          social.name === 'GitHub' ? <Github size={20} /> : null
+  }));
 
   return (
     <PageTransition>
       <div className="h-full overflow-y-auto custom-scrollbar bg-[#121212] pb-32">
         
-        {/* success popup */}
         <AnimatePresence>
             {showPopup && (
                 <motion.div
@@ -123,8 +88,8 @@ const Contact = () => {
                 >
                     <CheckCircle2 size={24} />
                     <div className="flex-1">
-                        <h4 className="font-bold text-sm">Message Sent!</h4>
-                        <p className="text-xs font-medium opacity-80">Thank you for reaching out.</p>
+                        <h4 className="font-bold text-sm">Opening Email Client!</h4>
+                        <p className="text-xs font-medium opacity-80">Send your message from there.</p>
                     </div>
                     <button onClick={() => setShowPopup(false)} className="hover:bg-black/10 p-1 rounded-full transition">
                         <X size={18} />
@@ -133,79 +98,59 @@ const Contact = () => {
             )}
         </AnimatePresence>
 
-        {/* header */}
-        <div className="relative bg-gradient-to-b from-[#535353] via-[#2a2a2a] to-[#121212] pt-24 pb-12 px-6 md:px-10 lg:px-14 flex flex-col md:flex-row items-end gap-6 md:gap-10 transition-colors duration-500">
-          {/* icon - changed gradient to pink */}
+        <div className="relative bg-gradient-to-b from-[#1a4a5e] via-[#0f2a33] to-[#121212] pt-24 pb-12 px-6 md:px-10 lg:px-14 flex flex-col md:flex-row items-end gap-6 md:gap-10 transition-colors duration-500">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-32 h-32 md:w-52 md:h-52 bg-gradient-to-br from-pink-500 to-rose-600 shadow-[0_8px_40px_rgba(0,0,0,0.5)] rounded-full md:rounded-md flex items-center justify-center shrink-0 group hover:scale-105 transition-transform duration-500"
+            className="w-32 h-32 md:w-52 md:h-52 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-[0_8px_40px_rgba(0,0,0,0.5)] rounded-full md:rounded-md flex items-center justify-center shrink-0 group hover:scale-105 transition-transform duration-500"
           >
             <MessageSquare className="text-white drop-shadow-md w-14 h-14 md:w-24 md:h-24 group-hover:rotate-12 transition-transform duration-500" />
           </motion.div>
 
-          {/* title */}
           <div className="flex flex-col gap-2 w-full z-10 pb-1">
             <span className="text-xs font-bold tracking-widest uppercase text-white flex items-center gap-1.5">
-              <CheckCircle2 size={16} className="text-pink-500 fill-white" />{" "}
-              Verified Contact
+              <CheckCircle2 size={16} className="text-teal-500 fill-white" /> Let's Connect
             </span>
-            <h1 className="text-4xl sm:text-6xl md:text-7xl  font-black tracking-tighter text-white drop-shadow-2xl leading-tight">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-white drop-shadow-2xl leading-tight">
               Get in Touch
             </h1>
             <p className="text-gray-300 font-medium text-sm md:text-base mt-3 max-w-2xl leading-relaxed">
-              Let's collaborate on your next project. Feel free to send a
-              message or connect via social media. I'm always open to discussing
-              new ideas.
+              Interested in discussing robotics, autonomous systems, or potential opportunities? 
+              I'm always open to connecting with fellow engineers and researchers.
             </p>
           </div>
         </div>
 
-        {/* content */}
         <div className="px-6 md:px-10 lg:px-14 grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 pb-20">
-          {/* socials */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-8"
-          >
-            {/* section title */}
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
             <div className="flex items-center justify-between border-b border-[#333] pb-2">
               <h3 className="text-xl font-bold text-white">Connect</h3>
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                Social Links
-              </span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Social Links</span>
             </div>
 
-            {/* featured email card */}
-            <motion.div
+            <motion.a
+              href={`mailto:${PROFILE.email}`}
               variants={itemVariants}
-              className="bg-[#181818] hover:bg-[#282828] p-4 md:p-5 rounded-lg group transition duration-300 border border-transparent hover:border-[#333] cursor-pointer"
+              className="bg-[#181818] hover:bg-[#282828] p-4 md:p-5 rounded-lg group transition duration-300 border border-transparent hover:border-[#333] cursor-pointer block"
             >
               <div className="flex items-center gap-3 md:gap-5">
-                <div className="w-12 h-12 md:w-14 md:h-14 bg-pink-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition shrink-0">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-teal-500 rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition shrink-0">
                   <Mail className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
                 <div className="overflow-hidden min-w-0 flex-1">
-                  <p className="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-0.5 md:mb-1 group-hover:text-pink-400 transition">
+                  <p className="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-0.5 md:mb-1 group-hover:text-teal-400 transition">
                     Primary Email
                   </p>
-                  <a
-                    href="mailto:fatiyalabibah17@gmail.com"
-                    className="text-white font-bold text-sm sm:text-base md:text-xl hover:underline truncate block"
-                    title="fatiyalabibah17@gmail.com"
-                  >
-                    fatiyalabibah17@gmail.com
-                  </a>
+                  <span className="text-white font-bold text-sm md:text-lg truncate block">
+                    {PROFILE.email}
+                  </span>
                 </div>
               </div>
-            </motion.div>
+            </motion.a>
 
-            {/* social list */}
             <div className="flex flex-col">
-              {SOCIAL_LINKS.map((social, idx) => (
+              {socialLinksWithIcons.map((social, idx) => (
                 <motion.a
                   variants={itemVariants}
                   key={social.id}
@@ -215,171 +160,57 @@ const Contact = () => {
                   className="flex items-center justify-between p-3 -mx-3 rounded-md hover:bg-[#ffffff1a] group transition cursor-pointer"
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <span className="text-gray-500 font-mono text-sm w-5 text-center group-hover:text-white transition">
-                      {idx + 1}
-                    </span>
+                    <span className="text-gray-500 font-mono text-sm w-5 text-center group-hover:text-white transition">{idx + 1}</span>
                     <div className="p-2 rounded bg-[#2a2a2a] group-hover:bg-[#333] text-gray-300 group-hover:text-white transition shrink-0">
                       {social.icon}
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span
-                        className={`font-bold text-base ${social.color} group-hover:text-white transition truncate`}
-                      >
-                        {social.name}
-                      </span>
-                      <span className="text-xs text-gray-400 group-hover:text-gray-300 transition truncate">
-                        {social.username}
-                      </span>
+                      <span className={`font-bold text-base ${social.color} group-hover:text-white transition truncate`}>{social.name}</span>
+                      <span className="text-xs text-gray-400 group-hover:text-gray-300 transition truncate">{social.username}</span>
                     </div>
                   </div>
-                  <ArrowUpRight
-                    size={18}
-                    className="text-gray-500 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 group-hover:-translate-y-1 shrink-0"
-                  />
+                  <ArrowUpRight size={18} className="text-gray-500 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 group-hover:-translate-y-1 shrink-0" />
                 </motion.a>
               ))}
             </div>
 
-            {/* location badge */}
             <div className="inline-flex items-center gap-3 text-gray-400 text-sm mt-4 px-4 py-2 bg-[#181818] rounded-full border border-transparent hover:border-[#333] transition">
-              <MapPin size={16} className="text-pink-500" />
-              <span>
-                Based in <b className="text-white">Bogor Regency, Indonesia</b>
-              </span>
+              <MapPin size={16} className="text-teal-500" />
+              <span>Based in <b className="text-white">{PROFILE.location}</b></span>
             </div>
           </motion.div>
 
-          {/* form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-[#121212]"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-[#121212]">
             <div className="flex items-center justify-between border-b border-[#333] pb-2 mb-8">
               <h3 className="text-xl font-bold text-white">Send a Message</h3>
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                No Login Required
-              </span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Quick Contact</span>
             </div>
 
             <form ref={form} className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2 group">
-                  <label
-                    className={`text-[11px] font-bold tracking-widest transition-colors ${
-                      focusedField === "name"
-                        ? "text-pink-400"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    NAME
-                  </label>
-                  <input
-                    type="text"
-                    name="name" // must match emailjs template variable
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="What's your name?"
-                    onFocus={() => setFocusedField("name")}
-                    onBlur={() => setFocusedField(null)}
-                    className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 shadow-sm"
-                    required
-                  />
+                <div className="flex flex-col gap-2">
+                  <label className={`text-[11px] font-bold tracking-widest transition-colors ${focusedField === "name" ? "text-teal-400" : "text-gray-400"}`}>NAME</label>
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Your name" onFocus={() => setFocusedField("name")} onBlur={() => setFocusedField(null)} className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-teal-500 transition-all font-medium placeholder-gray-500" required />
                 </div>
-
-                {/* email field */}
-                <div className="flex flex-col gap-2 group">
-                  <label
-                    className={`text-[11px] font-bold tracking-widest transition-colors ${
-                      focusedField === "email"
-                        ? "text-pink-400"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    EMAIL
-                  </label>
-                  <input
-                    type="email"
-                    name="email" // must match emailjs template variable
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="name@example.com"
-                    onFocus={() => setFocusedField("email")}
-                    onBlur={() => setFocusedField(null)}
-                    className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 shadow-sm"
-                    required
-                  />
+                <div className="flex flex-col gap-2">
+                  <label className={`text-[11px] font-bold tracking-widest transition-colors ${focusedField === "email" ? "text-teal-400" : "text-gray-400"}`}>EMAIL</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="name@example.com" onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)} className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-teal-500 transition-all font-medium placeholder-gray-500" required />
                 </div>
               </div>
 
-              {/* subject field */}
-              <div className="flex flex-col gap-2 group">
-                <label
-                  className={`text-[11px] font-bold tracking-widest transition-colors ${
-                    focusedField === "subject"
-                      ? "text-pink-400"
-                      : "text-gray-400"
-                  }`}
-                >
-                  SUBJECT
-                </label>
-                <input
-                  type="text"
-                  name="subject" // must match emailjs template variable
-                  value={formData.subject}
-                  onChange={handleChange}
-                  placeholder="Project Inquiry / Collab"
-                  onFocus={() => setFocusedField("subject")}
-                  onBlur={() => setFocusedField(null)}
-                  className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 shadow-sm"
-                />
+              <div className="flex flex-col gap-2">
+                <label className={`text-[11px] font-bold tracking-widest transition-colors ${focusedField === "subject" ? "text-teal-400" : "text-gray-400"}`}>SUBJECT</label>
+                <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Job Opportunity / Collaboration" onFocus={() => setFocusedField("subject")} onBlur={() => setFocusedField(null)} className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-teal-500 transition-all font-medium placeholder-gray-500" />
               </div>
 
-              {/* message field */}
-              <div className="flex flex-col gap-2 group">
-                <label
-                  className={`text-[11px] font-bold tracking-widest transition-colors ${
-                    focusedField === "message"
-                      ? "text-pink-400"
-                      : "text-gray-400"
-                  }`}
-                >
-                  MESSAGE
-                </label>
-                <textarea
-                  rows="5"
-                  name="message" // must match emailjs template variable
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell me more about your project..."
-                  onFocus={() => setFocusedField("message")}
-                  onBlur={() => setFocusedField(null)}
-                  className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-pink-500 transition-all font-medium placeholder-gray-500 resize-none shadow-sm"
-                  required
-                ></textarea>
+              <div className="flex flex-col gap-2">
+                <label className={`text-[11px] font-bold tracking-widest transition-colors ${focusedField === "message" ? "text-teal-400" : "text-gray-400"}`}>MESSAGE</label>
+                <textarea rows="5" name="message" value={formData.message} onChange={handleChange} placeholder="Tell me about the opportunity or project..." onFocus={() => setFocusedField("message")} onBlur={() => setFocusedField(null)} className="w-full bg-[#2a2a2a] hover:bg-[#3E3E3E] focus:bg-[#333] text-white rounded-md p-3.5 outline-none border border-transparent focus:border-teal-500 transition-all font-medium placeholder-gray-500 resize-none" required></textarea>
               </div>
 
-              {/* submit button - pink style */}
               <div className="pt-2 flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isSending}
-                  className="
-                                w-full md:w-auto
-                                bg-pink-600 hover:bg-pink-500 text-white font-bold 
-                                py-3.5 px-10 rounded-full 
-                                transition-all transform hover:scale-105 active:scale-95 
-                                flex items-center justify-center gap-2 
-                                shadow-lg shadow-pink-900/20
-                                disabled:opacity-50 disabled:cursor-not-allowed
-                            "
-                >
-                  {isSending ? (
-                      <>Sending... <Loader className="animate-spin" size={18}/></>
-                  ) : (
-                      <>Send Message <Send size={18} strokeWidth={2.5} /></>
-                  )}
+                <button type="submit" disabled={isSending} className="w-full md:w-auto bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-10 rounded-full transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-teal-900/20 disabled:opacity-50 disabled:cursor-not-allowed">
+                  {isSending ? (<>Sending... <Loader className="animate-spin" size={18}/></>) : (<>Send Message <Send size={18} strokeWidth={2.5} /></>)}
                 </button>
               </div>
             </form>

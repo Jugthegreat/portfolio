@@ -1,31 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Library, Plus, ArrowLeft, Search, Pin, 
-  Briefcase, GraduationCap, Award, Heart, Layers3, X, Mail
+  Briefcase, GraduationCap, Award, Heart, Layers3, X, Mail, Camera
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+
+// Import static data
+import { PROJECTS, CERTIFICATES } from '../data/portfolioData';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const MIN_WIDTH = 72;    
   const SNAP_THRESHOLD = 200; 
   const MAX_WIDTH = 420;   
 
-  // initialize width from local storage to persist state across page navigation
   const [width, setWidth] = useState(() => {
     const savedWidth = localStorage.getItem('sidebarWidth');
     return savedWidth ? parseInt(savedWidth) : 280;
   });
 
   const [isResizing, setIsResizing] = useState(false);
-  const [projectCount, setProjectCount] = useState(0);
-  const [certificateCount, setCertificateCount] = useState(0);
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
 
   const isCollapsed = width === MIN_WIDTH;
 
-  // save width to local storage whenever it changes
+  // Use static data counts
+  const projectCount = PROJECTS.length;
+  const certificateCount = CERTIFICATES.length;
+
   useEffect(() => {
     localStorage.setItem('sidebarWidth', width.toString());
   }, [width]);
@@ -60,29 +62,13 @@ const Sidebar = ({ isOpen, onClose }) => {
     };
   }, [isResizing]);
 
-  useEffect(() => {
-    const fetchCounts = async () => {
-      try {
-        const [projectsRes, certificatesRes] = await Promise.all([
-          axios.get('https://portfolio-be-five-dun.vercel.app/api/projects'),
-          axios.get('https://portfolio-be-five-dun.vercel.app/api/certificates')
-        ]);
-        setProjectCount(projectsRes.data.length);
-        setCertificateCount(certificatesRes.data.length);
-      } catch (error) {
-        console.error('Error fetching counts:', error);
-      }
-    };
-    fetchCounts();
-  }, []);
-
   const LIBRARY_ITEMS = [
     {
       id: 'liked',
-      title: 'Liked Projects',
+      title: 'All Projects',
       subtitle: `Pinned • ${projectCount} projects`,
       icon: <Heart size={20} className="text-white fill-current" />,
-      bg: 'bg-gradient-to-br from-[#450af5] to-[#c4efd9]',
+      bg: 'bg-gradient-to-br from-[#1a4a5e] to-[#0f2a33]',
       path: '/projects', 
       pinned: true
     },
@@ -119,24 +105,32 @@ const Sidebar = ({ isOpen, onClose }) => {
       path: '/skills'
     },
     {
+      id: 'beyond',
+      title: 'Beyond The Code',
+      subtitle: 'Life & Passions',
+      icon: <Camera size={20} className="text-white" />,
+      bg: 'bg-gradient-to-br from-purple-500 to-pink-500',
+      path: '/beyond'
+    },
+    {
       id: 'contact',
       title: 'Contact Me',
       subtitle: 'Let\'s Connect', 
       icon: <Mail size={20} className="text-white" />,
-      bg: 'bg-gradient-to-br from-pink-500 to-rose-500', 
+      bg: 'bg-gradient-to-br from-teal-500 to-cyan-600', 
       path: '/contact' 
     }
   ];
 
   return (
     <>
-      {/* mobile overlay */}
+      {/* Mobile overlay */}
       <div 
         className={`fixed inset-0 bg-black/60 z-[60] backdrop-blur-sm md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
 
-      {/* sidebar container */}
+      {/* Sidebar container */}
       <div 
         ref={sidebarRef}
         className={`
@@ -150,16 +144,15 @@ const Sidebar = ({ isOpen, onClose }) => {
         
         <div className="p-2 flex flex-col h-full overflow-hidden relative">
           
-          {/* header */}
+          {/* Header */}
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} px-4 py-3 text-[#b3b3b3] mb-2 shadow-sm shrink-0`}>
-             {/* logic: click library to expand if collapsed */}
              <button 
                 onClick={() => isCollapsed && setWidth(280)}
                 className="flex items-center gap-3 hover:text-white cursor-pointer transition group" 
                 title={isCollapsed ? "Expand Library" : "Your Library"}
              >
                <Library size={26} className={`shrink-0 ${isCollapsed ? 'mx-auto' : ''}`} />
-               {!isCollapsed && <span className="font-bold font-sans truncate text-base group-hover:text-white transition">Your Library</span>}
+               {!isCollapsed && <span className="font-bold font-sans truncate text-base group-hover:text-white transition">Portfolio</span>}
              </button>
              
              {!isCollapsed && (
@@ -177,10 +170,10 @@ const Sidebar = ({ isOpen, onClose }) => {
              )}
           </div>
 
-          {/* filter chips */}
+          {/* Filter chips */}
           {!isCollapsed && (
             <div className="flex gap-2 px-2 mb-4 overflow-x-auto no-scrollbar fade-in shrink-0">
-               {['Projects', 'Experience', 'Certificates'].map((chip) => (
+               {['Projects', 'Experience', 'Skills'].map((chip) => (
                   <button 
                       key={chip}
                       onClick={() => navigate(`/${chip.toLowerCase()}`)}
@@ -192,7 +185,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             </div>
           )}
 
-          {/* search bar */}
+          {/* Search bar */}
           {!isCollapsed && (
               <div className="px-4 flex justify-between items-center text-[#b3b3b3] mb-2 shrink-0">
                   <button className="hover:text-white p-1 -ml-1"><Search size={16}/></button>
@@ -200,13 +193,12 @@ const Sidebar = ({ isOpen, onClose }) => {
               </div>
           )}
 
-          {/* list content */}
+          {/* List content */}
           <div className="flex-1 overflow-y-auto custom-scrollbar px-2 pb-12">
              {LIBRARY_ITEMS.map((item) => (
                  <NavLink 
                     key={item.id} 
                     to={item.path}
-                    // on desktop, clicking link should NOT expand/collapse sidebar. only onClose on mobile.
                     onClick={() => window.innerWidth < 768 && onClose()}
                     className={({ isActive }) => 
                       `flex items-center gap-3 p-2 rounded-md cursor-pointer group ${isCollapsed ? 'justify-center' : ''} ${isActive ? 'bg-[#232323]' : 'hover:bg-[#1f1f1f]'}`
@@ -230,21 +222,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                  </NavLink>
              ))}
           </div>
-
-          {/* hidden admin login button */}
-          {!isCollapsed && (
-             <div className="absolute bottom-2 left-0 w-full flex justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 py-2 bg-gradient-to-t from-[#121212] to-transparent">
-                <button 
-                   onClick={() => navigate('/admin/login')}
-                   className="text-[#333] hover:text-gray-500 text-[10px] uppercase font-bold tracking-widest cursor-default hover:cursor-pointer"
-                >
-                   Admin
-                </button>
-             </div>
-          )}
         </div>
 
-        {/* resize handle (desktop only) */}
+        {/* Resize handle (desktop only) */}
         <div 
           className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-[#4d4d4d] active:bg-[#fff] transition-colors z-50 justify-center opacity-0 hover:opacity-100 group-hover:opacity-100 hidden md:flex"
           onMouseDown={startResizing}
