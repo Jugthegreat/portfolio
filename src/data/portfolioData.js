@@ -51,7 +51,7 @@ export const PROJECTS = [
     category: "Robotics, Software, Embedded",
     techStack: ["Arduino", "ESP32", "C++", "Unity"],
     description: "Developed haptic feedback gloves achieving sub-50ms latency for immersive VR experiences. Integrated multiple actuators for realistic touch sensation and finger tracking.",
-    imageUrl: "/images/projects/haptic-gloves.jpg",
+    imageUrl: "./images/projects/haptic-gloves.jpg",
     githubLink: "https://github.com/Jugthegreat/VR-GLOVES.git",
     demoLink: "https://www.linkedin.com/posts/jugalupadhyay2407_virtualreality-haptics-metaquest-activity-7317342804718850049-DCxF/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEMlRP4Bs47KqDuFoZGVhouTpcWMTrco7Bc",
     projectType: "Academic",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -66,7 +66,7 @@ export const PROJECTS = [
     category: "Robotics, Software",
     techStack: ["ROS", "Python", "YOLO"],
     description: "Implemented lane detection using edge detection, bird’s-eye view transformation, and computer vision",
-    imageUrl: "/images/projects/lanedet.jpg",
+    imageUrl: "./images/projects/lanedet.jpg",
     githubLink: "https://github.com/KenC1014/lane_follower.git",
     demoLink: "https://drive.google.com/file/d/1PAdvSqp5fA_Btss0TeJaVNCRS7hSPl0q/view",
     projectType: "Academic",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -81,7 +81,7 @@ export const PROJECTS = [
     category: "Robotics, Controls",
     techStack: ["ROS", "Python", "YOLO", "SLAM"],
     description: "Implemented autonomous navigation for ROBOTIS MINI humanoid robot achieving 88% obstacle detection precision. Used deep learning for real-time object detection and SLAM for mapping.",
-    imageUrl: "/images/projects/humanoid.jpg",
+    imageUrl: "./images/projects/humanoid.jpg",
     githubLink: "https://github.com/aleksandr-kim/ECE598JK_Group02.git",
     demoLink: "https://github.com/Jugthegreat/MINI-DARPA-CHALLENGE/blob/main/Final_Report__MINI_DARPA_Challenge.pdf",
     projectType: "Academic",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -96,7 +96,7 @@ export const PROJECTS = [
     category: "Robotics, Controls, Software",
     techStack: ["ROS", "C++", "Python", "Pure Pursuit"],
     description: "Advanced control systems for autonomous electric vehicle achieving 40% lap time improvement. Implemented Pure Pursuit and Stanley controllers with optimized trajectory tracking.",
-    imageUrl: "/images/projects/gem-vehicle.jpg",
+    imageUrl: "./images/projects/gem-vehicle.jpg",
     githubLink: "https://github.com/krishauser/GEMstack.git",
     demoLink: "https://docs.google.com/presentation/d/1IEW23HGfHUAo1lQDThwBT_NJMIN_G5Xtgkg1cLnuSgU/edit",
     projectType: "Academic",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -111,7 +111,7 @@ export const PROJECTS = [
     category: "AI",
     techStack: ["Python", "TensorFlow", "Satellite Imagery", "GIS"],
     description: "Judges' Choice Award winner at NASA Space Apps Challenge. Built environmental monitoring solution analyzing satellite imagery to track deforestation and vegetation health.",
-    imageUrl: "/images/projects/canopy.jpg",
+    imageUrl: "./images/projects/canopy.jpg",
     githubLink: "https://github.com/rkat7/nasa-space-apps-cuberts.git",
     demoLink: "https://youtu.be/H2IhdUGf5BA?si=Imd0JT9zH5fGN4-u",
     projectType: "Hackathon",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -126,7 +126,7 @@ export const PROJECTS = [
     category: "Robotics, Controls",
     techStack: ["Isaac Sim", "RoboSuite", "PyTorch", "RL"],
     description: "Training robotic arms for pick-and-place tasks using reinforcement learning in simulation environments. Implementing sim-to-real transfer techniques.",
-    imageUrl: "/images/projects/manipulation.jpg",
+    imageUrl: "./images/projects/manipulation.jpg",
     githubLink: "https://github.com/jugthegreat/robot-manipulation",
     demoLink: "",
     projectType: "Academic",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -141,7 +141,7 @@ export const PROJECTS = [
     category: "Software, AI",
     techStack: ["Versel", "TypeScript","Railway"],
     description: "Created an AI research chatbot with frontend deployed on vercel and backend deployed on railway. ",
-    imageUrl: "/images/projects/chatbot.jpg",
+    imageUrl: "./images/projects/chatbot.jpg",
     githubLink: "https://github.com/Jugthegreat/ai-research-agent.git",
     demoLink: "https://drive.google.com/file/d/1JV5Tt5z3ec3nmlucxTAld3ahRDoqDPEl/view",
     projectType: "Personal",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
@@ -319,27 +319,27 @@ export const PASSIONS = [
 export const PASSION_GALLERY = [
   // Add your images here - place actual images in public/images/gallery/
   {
-    url: "/images/gallery/im2.jpg",
+    url: "./images/gallery/im2.jpg",
     caption: "Skating",
     location: "Champaign, IL"
   },
   {
-    url: "/images/gallery/im3.jpg",
+    url: "./images/gallery/im3.jpg",
     caption: "Street Photography",
     location: "Chicago, IL"
   },
   {
-    url: "/images/gallery/im4.jpg",
+    url: "./images/gallery/im4.jpg",
     caption: "DJ Set at Rave",
     location: "Chicago, IL"
   },
   {
-    url: "/images/gallery/im5.jpg",
+    url: "./images/gallery/im5.jpg",
     caption: "UIUC Campus",
     location: "UIUC, IL"
   },
   {
-    url: "/images/gallery/im6.jpg",
+    url: "./images/gallery/im6.jpg",
     caption: "Nature",
     location: "IL"
   },
