@@ -51,7 +51,7 @@ const Home = () => {
         {/* Profile Image */}
         <div className="shrink-0 shadow-[0_8px_40px_rgba(0,0,0,0.6)] md:shadow-2xl mx-auto md:mx-0">
           <img
-            src="/images/profile.jpg" 
+            src="/portfolio/images/profile.jpg" 
             alt="Jugal Upadhyay"
             className="w-[200px] h-[200px] md:w-60 md:h-60 object-cover shadow-2xl rounded-md md:rounded-none"
           />
