@@ -31,7 +31,7 @@ const Projects = () => {
   });
 
   // Get first 6 projects for hero section
-  const featuredProjects = PROJECTS.slice(0, 8);
+  const featuredProjects = PROJECTS.slice(0, 9);
 
   return (
     <PageTransition>
