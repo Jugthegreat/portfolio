@@ -77,7 +77,7 @@ const Header = () => {
         <button onClick={() => navigate("/contact")} className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold hidden lg:block transition-all transform hover:scale-105 active:scale-95">
           Get In Touch
         </button>
-        <img src="/icon-spotify.png" alt="Spotify Icon" className="w-8 h-8 rounded-full" />
+        <img src="/portfolio/icon-spotify.png" alt="Spotify Icon" className="w-8 h-8 rounded-full" />
       </div>
     </div>
   );
