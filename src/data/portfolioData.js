@@ -149,6 +149,21 @@ export const PROJECTS = [
     duration: "1 week", 
     year: "2026",
     views: "1,200"
+  },
+  {
+    _id: "9",
+    title: "Amiga",
+    category: "Robotics, Controls",
+    techStack: ["ROS", "Python","ML"],
+    description: "Worked on Amiga robot, developing the controls for autonomous operation of the robot.",
+    imageUrl: "/portfolio/images/projects/amiga.jpg",
+    githubLink: "https://github.com/ameygavale/AMIGA-LAVENDER-LATENCY.git",
+    demoLink: "https://drive.google.com/file/d/1JxQoSDWRNDqRsud7K8JSRy1qiZKdpCm9/view?usp=sharing",
+    projectType: "Research",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
+    teamSize: 2,                  // Number of team members
+    duration: "4 months", 
+    year: "2025",
+    views: "5,200"
   }
 ];
 
