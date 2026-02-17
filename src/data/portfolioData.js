@@ -9,7 +9,7 @@ export const PROFILE = {
   email: "jugalbipinupadhyay@gmail.com", // UPDATE THIS
   location: "Champaign, Illinois, US",
   monthlyListeners: "10,000+",
-  resumeLink: "RESUME.pdf" // Add your resume to public folder
+  resumeLink: "/portfolio/RESUME.pdf" // Add your resume to public folder
 };
 
 export const SOCIAL_LINKS = [
