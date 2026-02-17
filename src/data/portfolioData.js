@@ -156,7 +156,7 @@ export const PROJECTS = [
     category: "Robotics, Controls",
     techStack: ["ROS", "Python","ML"],
     description: "Worked on Amiga robot, developing the controls for autonomous operation of the robot.",
-    imageUrl: "/portfolio/images/projects/amiga.jpg",
+    imageUrl: "/portfolio/images/projects/amiga.jpeg",
     githubLink: "https://github.com/ameygavale/AMIGA-LAVENDER-LATENCY.git",
     demoLink: "https://drive.google.com/file/d/1JxQoSDWRNDqRsud7K8JSRy1qiZKdpCm9/view?usp=sharing",
     projectType: "Research",      // Options: "Academic", "Personal", "Internship", "Hackathon", "Research"
