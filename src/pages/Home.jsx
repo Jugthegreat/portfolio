@@ -16,7 +16,7 @@ const Home = () => {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   // Use static data - take first 5 projects as "popular"
-  const popularProjects = PROJECTS.slice(0, 8);
+  const popularProjects = PROJECTS.slice(0, 9);
   const educationData = EDUCATION;
 
   // Close dropdown when clicking outside
