@@ -139,7 +139,7 @@ export const PROJECTS = [
     _id: "8",
     title: "AI Research Chatbot",
     category: "Software, AI",
-    techStack: ["Versel", "TypeScript","Railway"],
+    techStack: ["Vercel", "TypeScript","Railway"],
     description: "Created an AI research chatbot with frontend deployed on vercel and backend deployed on railway. ",
     imageUrl: "/portfolio/images/projects/chatbot.jpg",
     githubLink: "https://github.com/Jugthegreat/ai-research-agent.git",
