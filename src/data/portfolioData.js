@@ -169,6 +169,16 @@ export const PROJECTS = [
 
 export const EXPERIENCE = [
   {
+    _id: "3",
+    role: "Robotics Engineer",
+    company: "MarginDx (IHSI, University of Illinois)",
+    period: "May 2026 - Present",
+    type: "Full-time",
+    location: "In Person",
+    description: "Robotics engineer on MarginDx, a $33M ARPA-H-funded intraoperative imaging platform built with Mayo Clinic, Carle Health, NCSA, and Eleuthera Photonics to enable real-time tumor margin detection during cancer surgery. Combines label-free OCT and nonlinear optical imaging with AI-guided analysis to help surgeons achieve complete, dye-free tumor removal. Program and operate a KUKA robotic arm via Sunrise OS for robotic arm-assisted probe positioning, and develop EM sensor-based tracking for precise, real-time probe localization during procedures.",
+    skills: ["KUKA Robotics", "Sunrise OS", "EM Tracking", "Robotic Arm Control", "Surgical Robotics", "OCT Imaging"]
+  },
+  {
     _id: "1",
     role: "Project Engineer Intern",
     company: "Environomics",
